@@ -83,6 +83,10 @@ class reprepro {
       refreshonly => true,
       subscribe => File["$basedir/conf/distributions"],
       path => "/usr/bin:/bin";
+    "reprepro -b $basedir export":
+      refreshonly => true,
+      subscribe => File["$basedir/conf/distributions"],
+      path => "/usr/bin:/bin";
     "gpg --export -a `gpg --with-colon --list-secret-keys | awk -F ':' '{ print $5 }' | head -1` > $basedir/key.asc":
       creates => "$basedir/key.asc",
       subscribe => File["$basedir/.gnupg"],
