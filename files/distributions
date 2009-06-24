@@ -1,0 +1,53 @@
+Origin: Koumbit
+Label: Koumbit
+Suite: oldstable
+Codename: etch
+Version: 4.0
+Architectures: i386 amd64 source
+Components: main non-free contrib
+UDebComponents: main
+Description: Koumbit backports and debian packages
+SignWith: yes
+DebOverride: override
+UDebOverride: override
+DscOverride: srcoverride
+
+Origin: Koumbit
+Label: Koumbit
+Suite: stable
+Codename: lenny
+Version: 5.0
+Architectures: i386 amd64 source
+Components: main non-free contrib
+UDebComponents: main
+Description: Koumbit backports and debian packages
+SignWith: yes
+DebOverride: override
+UDebOverride: override
+DscOverride: srcoverride
+
+Origin: Koumbit
+Label: Koumbit
+Suite: testing
+Codename: squeeze
+Architectures: i386 amd64 source
+Components: main non-free contrib
+UDebComponents: main
+Description: Koumbit backports and debian packages
+SignWith: yes
+DebOverride: override
+UDebOverride: override
+DscOverride: srcoverride
+
+Origin: Koumbit
+Label: Koumbit
+Suite: unstable
+Codename: sid
+Architectures: i386 amd64 source
+Components: main non-free contrib
+UDebComponents: main
+Description: Koumbit backports and debian packages
+SignWith: yes
+DebOverride: override
+UDebOverride: override
+DscOverride: srcoverride
