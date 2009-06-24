@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Koumbit Debian package repository</title>
+</head>
+<body>
+<h1>Introduction</h1>
+
+<p>This is the Debian package repository of Koumbit. It is used for internal
+distribution of locally built packages not yet part of Debian. Feel free to use
+it for yourself, but it comes at no warranty, see <a
+href="https://wiki.koumbit.net/Beta">the Beta page</a> for more information.</p>
+
+<h1>How to use</h1>
+
+<p>In your /etc/apt/source.list:
+
+<pre>
+deb http://debian.koumbit.net/debian lenny main
+deb-src http://debian.koumbit.net/debian lenny main
+</pre>
+
+"lenny", of course, can be replaced by your distribution. Know that we usually
+package straight for etch or lenny. Packages will likely not be available in
+squeeze or sid.</p>
+
+<h2>Adding the archive key to your keyring</h2>
+
+<p>This archive self-signs packages uploaded to it (and packages uploaded are
+verified against a whitelist of trusted uploaders) using OpenPGP (GnuPG, to be
+more precise).</p>
+
+<p>The key of the archive is in the <a href="/key.asc">key.asc file</a>. You should add the key using something like this:</p>
+
+<pre>
+wget http://debian.koumbit.net/debian/key.asc
+apt-key add key.asc
+apt-get update
+</pre>

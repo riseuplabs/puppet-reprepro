@@ -69,9 +69,9 @@ class reprepro {
     mode => 0664, owner => root, group => reprepro,
     source => "puppet://$servername/reprepro/incoming";
 
-    "$basedir/README.txt":
+    "$basedir/index.html":
     mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$servername/reprepro/README.txt";
+    source => "puppet://$servername/reprepro/index.html";
 
     "$basedir/.gnupg":
     mode => 750, owner => reprepro, group => root,
