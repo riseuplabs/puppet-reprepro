@@ -1,5 +1,7 @@
 class reprepro {
 
+  $basedir = '/srv/reprepro'
+
   package {
     "reprepro":
       ensure => '3.9.2-1~bpo40+1';
@@ -8,61 +10,76 @@ class reprepro {
       ensure => '0.2.0-1~bpo40+1';
   }
 
+  user { "reprepro":
+    ensure => "present",
+    home => "$basedir",
+    gid => "reprepro",
+    password => "*",
+    comment => "reprepro sandbox",
+    require => Group["reprepro"],
+  }
+
   group { "reprepro":
     ensure => "present",
   }
 
 
   file {
-    "/srv/reprepro":
+    "$basedir":
     ensure => directory,
     mode => 0771, owner => root, group => reprepro;
 
-    "/srv/reprepro/conf":
+    "$basedir/conf":
     ensure => directory,
     mode => 0770, owner => root, group => reprepro;
 
-    "/srv/reprepro/db":
+    "$basedir/db":
     ensure => directory,
-    mode => 0770, owner => root, group => reprepro;
+    mode => 0770, owner => reprepro, group => reprepro;
 
-    "/srv/reprepro/dists":
+    "$basedir/dists":
     ensure => directory,
-    mode => 0775, owner => root, group => reprepro;
+    mode => 0775, owner => reprepro, group => reprepro;
 
-    "/srv/reprepro/pool":
+    "$basedir/pool":
     ensure => directory,
-    mode => 0775, owner => root, group => reprepro;
+    mode => 0775, owner => reprepro, group => reprepro;
 
-    "/srv/reprepro/incoming":
+    "$basedir/incoming":
     ensure => directory,
-    mode => 0775, owner => root, group => reprepro;
+    mode => 0775, owner => reprepro, group => reprepro;
 
-    "/srv/reprepro/logs":
+    "$basedir/logs":
     ensure => directory,
-    mode => 0775, owner => root, group => reprepro;
+    mode => 0775, owner => reprepro, group => reprepro;
 
-    "/srv/reprepro/tmp":
+    "$basedir/tmp":
     ensure => directory,
-    mode => 0775, owner => root, group => reprepro;
+    mode => 0775, owner => reprepro, group => reprepro;
 
-    "/srv/reprepro/conf/distributions":
+    "$basedir/conf/distributions":
     mode => 0664, owner => root, group => reprepro,
-    source => "$fileserver/reprepro/distributions";
+    source => "puppet://$servername/reprepro/distributions";
 
-    "/srv/reprepro/conf/uploaders":
+    "$basedir/conf/uploaders":
     mode => 0660, owner => root, group => reprepro,
-    source => "$fileserver/reprepro/uploaders";
+    source => "puppet://$servername/reprepro/uploaders";
 
-    "/srv/reprepro/conf/incoming":
+    "$basedir/conf/incoming":
     mode => 0664, owner => root, group => reprepro,
-    source => "$fileserver/reprepro/incoming";
+    source => "puppet://$servername/reprepro/incoming";
 
-    "/srv/reprepro/index.html":
+    "$basedir/index.html":
     mode => 0664, owner => root, group => reprepro,
-    source => "$fileserver/reprepro/index.html";
+    source => "puppet://$servername/reprepro/index.html";
   }
 
+  exec { "reprepro -b $basedir createsymlinks":
+    refreshonly => true,
+    subscribe => File["$basedir/conf/distributions"],
+    path => "/usr/bin:/bin",
+  }
+  
 # TODO: additional things this class could do
 # setup inotincoming cronjob
 # ensure it stays running
