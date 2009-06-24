@@ -69,9 +69,13 @@ class reprepro {
     mode => 0664, owner => root, group => reprepro,
     source => "puppet://$servername/reprepro/incoming";
 
-    "$basedir/index.html":
+    "$basedir/README.txt":
     mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$servername/reprepro/index.html";
+    source => "puppet://$servername/reprepro/README.txt";
+
+    "$basedir/.gnupg":
+    mode => 750, owner => reprepro, group => root,
+    ensure => directory;
   }
 
   exec { "reprepro -b $basedir createsymlinks":
@@ -79,7 +83,12 @@ class reprepro {
     subscribe => File["$basedir/conf/distributions"],
     path => "/usr/bin:/bin",
   }
-  
+
+  exec { "gpg --export -a `gpg --with-colon --list-secret-keys | awk -F ':' '{ print $5 }' | head -1` > $basedir/key.asc":
+    creates => "$basedir/key.asc",
+    subscribe => File["$basedir/.gnupg"],
+  }
+
 # TODO: additional things this class could do
 # setup inotincoming cronjob
 # ensure it stays running
