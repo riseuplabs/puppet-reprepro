@@ -1,5 +1,13 @@
 #! /bin/sh
 #
+# This should be a startup script for inoticoming for reprepro, but it doesn't work well.
+#
+# For some reason, it doesn't log its progress to the logfile when started here, while the following works:
+#
+# /usr/bin/inoticoming  --logfile /srv/reprepro/logs/i.log /srv/reprepro/incoming/ --stderr-to-log --stdout-to-log  --suffix '.changes'  --chdir /srv/reprepro reprepro -b /srv/reprepro --waitforlock 100 processincoming local {} \;
+#
+# The arguments are very similar so I'm not sure what's wrong.
+#
 # skeleton	example file to build /etc/init.d/ scripts.
 #		This file should be used to construct scripts for /etc/init.d.
 #
