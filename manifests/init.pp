@@ -78,19 +78,26 @@ class reprepro {
     ensure => directory;
   }
 
-  exec { "reprepro -b $basedir createsymlinks":
-    refreshonly => true,
-    subscribe => File["$basedir/conf/distributions"],
-    path => "/usr/bin:/bin",
+  exec {
+    "reprepro -b $basedir createsymlinks":
+      refreshonly => true,
+      subscribe => File["$basedir/conf/distributions"],
+      path => "/usr/bin:/bin";
+    "gpg --export -a `gpg --with-colon --list-secret-keys | awk -F ':' '{ print $5 }' | head -1` > $basedir/key.asc":
+      creates => "$basedir/key.asc",
+      subscribe => File["$basedir/.gnupg"],
+      path => "/usr/bin:/bin";
   }
 
-  exec { "gpg --export -a `gpg --with-colon --list-secret-keys | awk -F ':' '{ print $5 }' | head -1` > $basedir/key.asc":
-    creates => "$basedir/key.asc",
-    subscribe => File["$basedir/.gnupg"],
+  cron { reprepro:
+    command => "/usr/bin/reprepro -b $basedir processincoming incoming",
+    user => reprepro,
+    hour => '*',
+    minute => '*/5',
+    require => [ Package['reprepro'], File["$basedir/conf/distributions"] ]
   }
 
 # TODO: additional things this class could do
-# setup inotincoming cronjob
 # ensure it stays running
 # setup needeed lines in apache site config file
 
