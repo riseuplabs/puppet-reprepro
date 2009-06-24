@@ -1,53 +1,41 @@
-Origin: Koumbit
-Label: Koumbit
+Origin: koumbit
+Label: koumbit
 Suite: oldstable
 Codename: etch
 Version: 4.0
 Architectures: i386 amd64 source
 Components: main non-free contrib
-UDebComponents: main
-Description: Koumbit backports and debian packages
+Description: koumbit specific (or backported) packages
 SignWith: yes
-DebOverride: override
-UDebOverride: override
-DscOverride: srcoverride
+Uploaders: uploaders
 
-Origin: Koumbit
-Label: Koumbit
+Origin: koumbit
+Label: koumbit
 Suite: stable
 Codename: lenny
 Version: 5.0
 Architectures: i386 amd64 source
 Components: main non-free contrib
-UDebComponents: main
-Description: Koumbit backports and debian packages
+Description: koumbit specific (or backported) packages
 SignWith: yes
-DebOverride: override
-UDebOverride: override
-DscOverride: srcoverride
+Uploaders: uploaders
 
-Origin: Koumbit
-Label: Koumbit
+Origin: koumbit
+Label: koumbit
 Suite: testing
 Codename: squeeze
 Architectures: i386 amd64 source
 Components: main non-free contrib
-UDebComponents: main
-Description: Koumbit backports and debian packages
+Description: koumbit specific (or backported) packages
 SignWith: yes
-DebOverride: override
-UDebOverride: override
-DscOverride: srcoverride
+Uploaders: uploaders
 
-Origin: Koumbit
-Label: Koumbit
+Origin: koumbit
+Label: koumbit
 Suite: unstable
 Codename: sid
 Architectures: i386 amd64 source
 Components: main non-free contrib
-UDebComponents: main
-Description: Koumbit backports and debian packages
+Description: koumbit specific (or backported) packages
 SignWith: yes
-DebOverride: override
-UDebOverride: override
-DscOverride: srcoverride
+Uploaders: uploaders
