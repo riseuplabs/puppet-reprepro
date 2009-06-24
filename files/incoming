@@ -1,4 +1,5 @@
 Name: incoming
-IncomingDir: /srv/reprepro/incoming
-TempDir: /srv/reprepro/tmp
-Allow: stable>etch stable>etch-proposed-updates mystuff unstable>sid
+IncomingDir: incoming
+TempDir: tmp
+Allow: oldstable>etch stable>lenny testing>squeeze unstable>sid
+Cleanup: on_deny on_error
