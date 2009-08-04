@@ -97,7 +97,7 @@ class reprepro {
   }
 
   cron { reprepro:
-    command => "/usr/bin/reprepro -b $basedir processincoming incoming",
+    command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
     user => reprepro,
     hour => '*',
     minute => '*/5',
