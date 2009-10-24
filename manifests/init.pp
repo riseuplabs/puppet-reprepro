@@ -2,12 +2,19 @@ class reprepro {
 
   $basedir = '/srv/reprepro'
 
-  package {
-    "reprepro":
-      ensure => '3.9.2-1~bpo40+1';
-
-    "inoticoming":
-      ensure => '0.2.0-1~bpo40+1';
+  case $lsbdistcodename {
+    etch: { 
+      package {
+        "reprepro": ensure => '3.9.2-1~bpo40+1';
+        "inoticoming": ensure => '0.2.0-1~bpo40+1';
+      }
+    }
+    default: {
+      package {
+        "reprepro": ensure => 'installed';
+        "inoticoming": ensure => 'installed';
+      }
+    }
   }
 
   user { "reprepro":
