@@ -1,5 +1,9 @@
 class reprepro {
 
+  case $reprepro_uploaders {
+    '': { fail("You need the repository uploaders! Please set \$reprepro_uploaders in your config") }
+  }
+
   $basedir = $reprepro_basedir ? {
     ''      => '/srv/reprepro',
     default => $reprepro_basedir,
