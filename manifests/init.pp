@@ -1,6 +1,9 @@
 class reprepro {
 
-  $basedir = '/srv/reprepro'
+  $basedir = $reprepro_basedir ? {
+    ''      => '/srv/reprepro',
+    default => $reprepro_basedir,
+  }
 
   case $lsbdistcodename {
     etch: { 
@@ -66,11 +69,11 @@ class reprepro {
 
     "$basedir/conf/distributions":
     mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$servername/reprepro/distributions";
+    content => template("reprepro/distributions.erb");
 
     "$basedir/conf/uploaders":
     mode => 0660, owner => root, group => reprepro,
-    source => "puppet://$servername/reprepro/uploaders";
+    content => template("reprepro/uploaders.erb");
 
     "$basedir/conf/incoming":
     mode => 0664, owner => root, group => reprepro,
@@ -78,7 +81,7 @@ class reprepro {
 
     "$basedir/index.html":
     mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$servername/reprepro/index.html";
+    source => template("reprepro/index.html.erb");
 
     "$basedir/.gnupg":
     mode => 750, owner => reprepro, group => root,

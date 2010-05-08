@@ -1,0 +1,4 @@
+# reprepro uploaders, file managed by puppet
+<% reprepro_upladers.each do |uploader| -%> 
+allow * by key <%= uploader %>
+<% end -%>
