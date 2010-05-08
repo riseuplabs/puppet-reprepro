@@ -26,9 +26,8 @@ DESC=inoticoming
 
 test -x $DAEMON || exit 0
 
-basedir=/srv/reprepro
+basedir=<%= basedir %>
 
-LOGDIR=/var/log/drush
 PIDFILE=/var/run/reprepro/$NAME.pid
 USER=reprepro
 GROUP=$USER
