@@ -81,11 +81,11 @@ class reprepro {
 
     "$basedir/conf/incoming":
     mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$servername/reprepro/incoming";
+    source => "puppet://$server/modules/reprepro/incoming";
 
     "$basedir/index.html":
     mode => 0664, owner => root, group => reprepro,
-    source => template("reprepro/index.html.erb");
+    content => template("reprepro/index.html.erb");
 
     "$basedir/.gnupg":
     mode => 750, owner => reprepro, group => root,
