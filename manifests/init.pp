@@ -103,7 +103,7 @@ class reprepro {
       user => reprepro,
       subscribe => File["$basedir/conf/distributions"],
       path => "/usr/bin:/bin";
-    "gpg --export -a `gpg --with-colon --list-secret-keys | awk -F ':' '{ print \$5 }' | head -1` > $basedir/key.asc":
+    "gpg --export -a `gpg --with-colon --list-secret-keys | cut -d : -f 5 | head -1` > $basedir/key.asc":
       creates => "$basedir/key.asc",
       user => reprepro,
       subscribe => File["$basedir/.gnupg"],
