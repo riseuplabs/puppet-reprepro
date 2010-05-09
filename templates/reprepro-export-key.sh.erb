@@ -1,7 +1,9 @@
 #!/bin/bash
 
-KEY="`/usr/bin/gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | /usr/bin/cut -d : -f 5 | /usr/bin/head -1`"
+/usr/bin/gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | /usr/bin/cut -d : -f 5 | /usr/bin/head -n 1 &> <%= basedir %>/key.log
+
+KEY="`/usr/bin/gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | /usr/bin/cut -d : -f 5 | /usr/bin/head -n 1`"
 
 if [ ! -z "$KEY" ]; then
-  /usr/bin/gpg --export --armor $KEY > <%= basedir %>/key.asc
+  /usr/bin/gpg --export --armor $KEY &> <%= basedir %>/key.asc
 fi
