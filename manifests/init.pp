@@ -89,7 +89,7 @@ class reprepro {
     content => template("reprepro/index.html.erb");
 
     "$basedir/.gnupg":
-    mode => 750, owner => reprepro, group => root,
+    mode => 700, owner => reprepro, group => reprepro,
     ensure => directory;
 
     "/usr/local/bin/reprepro-export-key":
@@ -116,6 +116,7 @@ class reprepro {
       user        => reprepro,
       subscribe   => File["$basedir/.gnupg"],
       require     => File["/usr/local/bin/reprepro-export-key"],
+      refreshonly => true,
   }
 
   cron { reprepro:
