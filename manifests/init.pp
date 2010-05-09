@@ -116,7 +116,6 @@ class reprepro {
       user        => reprepro,
       subscribe   => File["$basedir/.gnupg"],
       require     => File["/usr/local/bin/reprepro-export-key"],
-      refreshonly => true,
   }
 
   cron { reprepro:
