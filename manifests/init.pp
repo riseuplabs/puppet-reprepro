@@ -92,6 +92,10 @@ class reprepro {
     mode => 700, owner => reprepro, group => reprepro,
     ensure => directory;
 
+    "$basedir/.gnupg/secring.gpg":
+    mode => 600, owner => reprepro, group => reprepro,
+    ensure => present;
+
     "/usr/local/bin/reprepro-export-key":
     ensure  => present,
     content => template('reprepro/reprepro-export-key.sh.erb'),
@@ -114,7 +118,7 @@ class reprepro {
     "/usr/local/bin/reprepro-export-key":
       creates     => "$basedir/key.asc",
       user        => reprepro,
-      subscribe   => File["$basedir/.gnupg"],
+      subscribe   => File["$basedir/.gnupg/secring.gpg"],
       require     => File["/usr/local/bin/reprepro-export-key"],
       refreshonly => true,
   }
