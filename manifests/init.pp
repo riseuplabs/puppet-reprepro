@@ -112,10 +112,11 @@ class reprepro {
       subscribe => File["$basedir/conf/distributions"],
       path => "/usr/bin:/bin";
     "/usr/local/bin/reprepro-export-key":
-      creates   => "$basedir/key.asc",
-      user      => reprepro,
-      subscribe => File["$basedir/.gnupg"],
-      require   => File["/usr/local/bin/reprepro-export-key"],
+      creates     => "$basedir/key.asc",
+      user        => reprepro,
+      subscribe   => File["$basedir/.gnupg"],
+      require     => File["/usr/local/bin/reprepro-export-key"],
+      refreshonly => true,
   }
 
   cron { reprepro:
