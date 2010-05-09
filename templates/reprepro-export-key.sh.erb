@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/usr/bin/gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys > <%= basedir %>/key.log
+/usr/bin/gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | /usr/bin/cut -d : -f 5 | /usr/bin/head -1 &> <%= basedir %>/key.log
 
 KEY="`/usr/bin/gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | /usr/bin/cut -d : -f 5 | /usr/bin/head -1`"
 
