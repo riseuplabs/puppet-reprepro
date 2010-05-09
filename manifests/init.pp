@@ -42,7 +42,7 @@ class reprepro {
   file {
     "$basedir":
     ensure => directory,
-    mode => 0771, owner => root, group => reprepro;
+    mode => 0771, owner => reprepro, group => reprepro;
 
     "$basedir/conf":
     ensure => directory,
