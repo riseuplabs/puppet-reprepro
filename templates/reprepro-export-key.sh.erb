@@ -1,0 +1,4 @@
+#!/bin/bash
+
+KEY="`gpg --with-colon --list-secret-keys | cut -d : -f 5 | head -1`"
+gpg --export -a $KEY > <%= basedir %>/key.asc

@@ -90,6 +90,13 @@ class reprepro {
     "$basedir/.gnupg":
     mode => 750, owner => reprepro, group => root,
     ensure => directory;
+
+    "/usr/local/bin/reprepro-export-key":
+    ensure  => present,
+    content => template('reprepro/reprepro-export-key.sh.erb'),
+    owner   => root,
+    group   => root,
+    mode    => 755,
   }
 
   exec {
@@ -103,11 +110,11 @@ class reprepro {
       user => reprepro,
       subscribe => File["$basedir/conf/distributions"],
       path => "/usr/bin:/bin";
-    "gpg --export -a `gpg --with-colon --list-secret-keys | cut -d : -f 5 | head -1` > $basedir/key.asc":
-      creates => "$basedir/key.asc",
-      user => reprepro,
+    "/usr/local/bin/reprepro-export-key":
+      creates   => "$basedir/key.asc",
+      user      => reprepro,
       subscribe => File["$basedir/.gnupg"],
-      path => "/usr/bin:/bin";
+      require   => File["/usr/local/bin/reprepro-export-key"],
   }
 
   cron { reprepro:
