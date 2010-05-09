@@ -33,10 +33,11 @@ class reprepro {
     require => Group["reprepro"],
   }
 
-  group { "reprepro":
-    ensure => "present",
+  if !defined(Group["reprepro"]) {
+    group { "reprepro":
+      ensure => present,
+    }
   }
-
 
   file {
     "$basedir":
