@@ -1,5 +1,5 @@
 Name: incoming
 IncomingDir: incoming
 TempDir: tmp
-Allow: oldstable>etch stable>lenny testing>squeeze unstable>sid
+Allow: oldstable>lenny stable>squeeze testing>wheezy unstable>sid
 Cleanup: on_deny on_error
