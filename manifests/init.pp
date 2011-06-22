@@ -127,17 +127,17 @@ class reprepro {
       refreshonly => true,
   }
 
+# TODO: setup needeed lines in apache site config file
+
+}
+
+class reprepro::cron inherits reprepro {
   cron { reprepro:
     command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
     user => reprepro,
     minute => '*/5',
     require => [ Package['reprepro'], File["$basedir/conf/distributions"] ]
   }
-
-# TODO: additional things this class could do
-# ensure it stays running
-# setup needeed lines in apache site config file
-
 }
 
 class reprepro::inotify inherits reprepro {
