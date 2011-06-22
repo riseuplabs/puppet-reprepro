@@ -158,7 +158,7 @@ class reprepro::inotify inherits reprepro {
   }
   service { "reprepro":
       ensure => "running",
-      pattern => "/inoticoming.*reprepro.*processincoming/",
+      pattern => "inoticoming.*reprepro.*processincoming",
       hasstatus => false,
       require => [File["/etc/default/reprepro"],
                   Exec["reprepro_init_script"],
