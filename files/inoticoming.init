@@ -1,15 +1,12 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          inoticoming
+# Provides:          reprepro
 # Required-Start:    $local_fs $syslog
 # Required-Stop:     $local_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Example initscript for inoticoming
-# Description:       This script provides an example how to start an instance
-#                    of inoticoming via an initscript. Place this file in
-#                    /etc/init.d, e.g. as /etc/init.d/inoticoming, and define
-#                    your settings in /etc/default/inoticoming.
+# Short-Description: Reprepro startup script for inoticoming support
+# Description:       This script an instance of inoticoming via an initscript.
 ### END INIT INFO
 
 # Copyright (c) 2008 by Tilman Koschnick <til@subnetz.org>
@@ -20,8 +17,8 @@
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="incoming queue monitor"
-NAME=inoticoming
+DESC="reprepro incoming queue monitor"
+NAME=reprepro
 DAEMON=/usr/bin/inoticoming
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
