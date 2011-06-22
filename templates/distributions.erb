@@ -1,9 +1,21 @@
 Origin: <%= domain %>
 Label: <%= domain %>
+Suite: reallyoldstable
+Codename: etch
+Version: 3.0
+Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
+Components: main non-free contrib
+Description: <%= domain %> specific (or backported) packages
+SignWith: yes
+Uploaders: uploaders
+
+Origin: <%= domain %>
+Label: <%= domain %>
 Suite: oldstable
+Pull: stable
 Codename: lenny
-Version: 4.0
-Architectures: i386 amd64 source
+Version: 5.0
+Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
 Components: main non-free contrib
 Description: <%= domain %> specific (or backported) packages
 SignWith: yes
@@ -12,19 +24,21 @@ Uploaders: uploaders
 Origin: <%= domain %>
 Label: <%= domain %>
 Suite: stable
+Pull: testing
 Codename: squeeze
-Version: 5.0
-Architectures: i386 amd64 source
+Version: 6.0
+Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
 Components: main non-free contrib
-Description: <%= domain %> specific (or backported) packages
+Description: koumbit specific (or backported) packages
 SignWith: yes
 Uploaders: uploaders
 
-Origin: <%= domain %>
-Label: <%= domain %>
+Origin: koumbit
+Label: koumbit
 Suite: testing
+Pull: unstable
 Codename: wheezy
-Architectures: i386 amd64 source
+Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
 Components: main non-free contrib
 Description: <%= domain %> specific (or backported) packages
 SignWith: yes
@@ -34,8 +48,8 @@ Origin: <%= domain %>
 Label: <%= domain %>
 Suite: unstable
 Codename: sid
-Architectures: i386 amd64 source
+Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
 Components: main non-free contrib
 Description: <%= domain %> specific (or backported) packages
 SignWith: yes
-Uploaders: uploaders
+Uploaders: uploaders-sid
