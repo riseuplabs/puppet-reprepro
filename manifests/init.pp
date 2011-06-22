@@ -62,7 +62,7 @@ class reprepro {
 
     "$basedir/incoming":
     ensure => directory,
-    mode => 0775, owner => reprepro, group => reprepro;
+    mode => 1777, owner => reprepro, group => reprepro;
 
     "$basedir/logs":
     ensure => directory,
