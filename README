@@ -1,0 +1,10 @@
+Variables
+=========
+
+$reprepro_incoming_mode
+-----------------------
+
+This module manages the reprepro incoming directory and sets its
+permissions to $reprepro_incoming_mode.
+
+Default: 1777

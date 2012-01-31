@@ -28,6 +28,11 @@ class reprepro {
     }
   }
 
+  $incoming_mode = $reprepro_incoming_mode ? {
+    ''      => 1777,
+    default => $reprepro_incoming_mode,
+  }
+
   user { "reprepro":
     ensure => "present",
     home => "$basedir",
@@ -66,7 +71,7 @@ class reprepro {
 
     "$basedir/incoming":
     ensure => directory,
-    mode => 1777, owner => reprepro, group => reprepro;
+    mode => $incoming_mode, owner => reprepro, group => reprepro;
 
     "$basedir/logs":
     ensure => directory,
