@@ -17,13 +17,11 @@ class reprepro {
     etch: { 
       package {
         "reprepro": ensure => '3.9.2-1~bpo40+1';
-        "inoticoming": ensure => '0.2.0-1~bpo40+1';
       }
     }
     default: {
       package {
         "reprepro": ensure => 'installed';
-        "inoticoming": ensure => 'installed';
       }
     }
   }
@@ -146,6 +144,18 @@ class reprepro::cron inherits reprepro {
 }
 
 class reprepro::inotify inherits reprepro {
+  case $lsbdistcodename {
+    etch: {
+      package {
+        "inoticoming": ensure => '0.2.0-1~bpo40+1';
+      }
+    }
+    default: {
+      package {
+        "inoticoming": ensure => 'installed';
+      }
+    }
+  }
   file { "/etc/init.d/reprepro":
       owner => root, group => root, mode => 0755,
       source => "puppet://$server/modules/reprepro/inoticoming.init";
