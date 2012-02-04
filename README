@@ -1,6 +1,15 @@
 Variables
 =========
 
+$reprepro_manage_distributions_conf, $reprepro_manage_incoming_conf
+-------------------------------------------------------------------
+
+If true, the content of -respectively- the conf/distributions and
+conf/incoming files is managed by this module. Else, only the
+existence, ownership and permissions are.
+
+Default: true.
+
 $reprepro_incoming_mode
 -----------------------
 

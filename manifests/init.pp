@@ -1,5 +1,13 @@
 class reprepro {
 
+  case $reprepro_manage_distributions_conf {
+    '': { $reprepro_manage_distributions_conf = true }
+  }
+
+  case $reprepro_manage_incoming_conf {
+    '': { $reprepro_manage_incoming_conf = true }
+  }
+
   case $reprepro_origin {
     '': { $reprepro_origin = $domain }
   }
@@ -80,16 +88,14 @@ class reprepro {
     mode => 0775, owner => reprepro, group => reprepro;
 
     "$basedir/conf/distributions":
-    mode => 0664, owner => root, group => reprepro,
-    content => template("reprepro/distributions.erb");
+    mode => 0664, owner => root, group => reprepro;
 
     "$basedir/conf/uploaders":
     mode => 0660, owner => root, group => reprepro,
     content => template("reprepro/uploaders.erb");
 
     "$basedir/conf/incoming":
-    mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$server/modules/reprepro/incoming";
+    mode => 0664, owner => root, group => reprepro;
 
     "$basedir/index.html":
     mode => 0664, owner => root, group => reprepro,
@@ -109,6 +115,18 @@ class reprepro {
     owner   => root,
     group   => root,
     mode    => 755,
+  }
+
+  if $reprepro_manage_distributions_conf {
+    File["$basedir/conf/distributions"] {
+      content => template("reprepro/distributions.erb")
+    }
+  }
+
+  if $reprepro_manage_incoming_conf {
+    File["$basedir/conf/incoming"] {
+      source => "puppet://$server/modules/reprepro/incoming"
+    }
   }
 
   exec {
