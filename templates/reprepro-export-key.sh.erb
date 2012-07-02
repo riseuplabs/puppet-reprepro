@@ -6,4 +6,5 @@ if [ ! -z "$KEY" ]; then
   tempfile=$(mktemp)
   gpg --homedir <%= basedir %>/.gnupg --export --armor $KEY > "$tempfile"
   mv "$tempfile" <%= basedir %>/key.asc
+  chmod 0664 <%= basedir %>/key.asc
 fi
