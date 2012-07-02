@@ -4,7 +4,9 @@ KEY="`gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | cut 
 
 if [ ! -z "$KEY" ]; then
   tempfile=$(mktemp)
+  destfile=<%= basedir %>/key.asc
   gpg --homedir <%= basedir %>/.gnupg --export --armor $KEY > "$tempfile"
-  mv "$tempfile" <%= basedir %>/key.asc
-  chmod 0664 <%= basedir %>/key.asc
+  mv    "$tempfile"       "$destfile"
+  chown reprepro:reprepro "$destfile"
+  chmod 0664              "$destfile"
 fi
