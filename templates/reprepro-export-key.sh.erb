@@ -3,5 +3,8 @@
 KEY="`gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1`"
 
 if [ ! -z "$KEY" ]; then
-  gpg --homedir <%= basedir %>/.gnupg --export --armor $KEY > <%= basedir %>/key.asc
+  tempfile=$(mktemp)
+  gpg --homedir <%= basedir %>/.gnupg --export --armor $KEY > "$tempfile"
+  mv "$tempfile" <%= basedir %>/key.asc
+  chmod 0664 <%= basedir %>/key.asc
 fi
