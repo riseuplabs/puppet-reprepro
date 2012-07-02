@@ -124,7 +124,6 @@ class reprepro {
       user        => reprepro,
       subscribe   => File["$basedir/.gnupg/secring.gpg"],
       require     => File["/usr/local/bin/reprepro-export-key"],
-      refreshonly => true,
   }
 
 # TODO: setup needeed lines in apache site config file
