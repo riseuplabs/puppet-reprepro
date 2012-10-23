@@ -14,9 +14,9 @@ LOGFILE="/var/log/incoming.log"
 INITIALSEARCH=0
 
 # directory to monitor
-DIR=<%= basedir %>/incoming
+DIR=<%= @basedir %>/incoming
 
 # actions
-BASEDIR=<%= basedir %>
+BASEDIR=<%= @basedir %>
 RULENAME=incoming
 ACTIONS="--suffix .changes --stderr-to-log reprepro -s -b $BASEDIR --waitforlock 1000 processincoming $RULENAME {} ;"
