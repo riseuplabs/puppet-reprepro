@@ -1,38 +1,20 @@
-class reprepro {
-
-  case $reprepro_manage_distributions_conf {
-    '': { $reprepro_manage_distributions_conf = true }
-  }
-
-  case $reprepro_manage_incoming_conf {
-    '': { $reprepro_manage_incoming_conf = true }
-  }
-
-  case $reprepro_origin {
-    '': { $reprepro_origin = $domain }
-  }
-
-  case $reprepro_uploaders {
-    '': { fail("You need the repository uploaders! Please set \$reprepro_uploaders in your config") }
-  }
-
-  $basedir = $reprepro_basedir ? {
-    ''      => '/srv/reprepro',
-    default => $reprepro_basedir,
-  }
-
+class reprepro (
+  $uploaders = 'undefined',
+  $basedir = '/srv/reprepro',
+  $origin  = $::domain,
+  $basedir_mode  = '0771',
+  $incoming_mode = '1777',
+  $manage_distributions_conf    = true,
+  $manage_incoming_conf         = true,
+  $handle_incoming_with_cron    = false,
+  $handle_incoming_with_inotify = false,
+){
   package {
     "reprepro": ensure => 'installed';
   }
 
-  $basedir_mode = $reprepro_basedir_mode ? {
-    ''      => 0771,
-    default => $reprepro_basedir_mode,
-  }
-
-  $incoming_mode = $reprepro_incoming_mode ? {
-    ''      => 1777,
-    default => $reprepro_incoming_mode,
+  if $uploaders == 'undefined' {
+    fail("The uploaders parameter is required by the reprepro class.")
   }
 
   user { "reprepro":
@@ -113,7 +95,7 @@ class reprepro {
     mode    => 755,
   }
 
-  if $reprepro_manage_distributions_conf {
+  if $manage_distributions_conf {
     File["$basedir/conf/distributions"] {
       owner   => root,
       group   => reprepro,
@@ -135,7 +117,7 @@ class reprepro {
     }
   }
 
-  if $reprepro_manage_incoming_conf {
+  if $manage_incoming_conf {
     File["$basedir/conf/incoming"] {
       mode => 0664,
       owner => root,
@@ -144,6 +126,57 @@ class reprepro {
     }
   }
 
+  # Handling of incoming with cron
+
+  $cron_presence = $handle_incoming_with_cron ? {
+    true    => present,
+    default => absent,
+  }
+
+  cron { 'reprepro':
+    ensure  => $cron_presence,
+    command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
+    user    => reprepro,
+    minute  => '*/5',
+    require => [ Package['reprepro'], File["$basedir/conf/distributions"] ],
+  }
+
+  # Handling of incoming with inoticoming
+
+  $inoticoming_presence = $handle_incoming_with_inotify ? {
+    true    => present,
+    default => absent,
+  }
+  $inoticoming_enabled = $handle_incoming_with_inotify ? {
+    true    => true,
+    default => false,
+  }
+
+  package { 'inoticoming':
+    ensure => $inoticoming_presence,
+  }
+  file { '/etc/init.d/reprepro':
+    ensure => $inoticoming_presence,
+    owner  => root,
+    group  => root,
+    mode   => 0755,
+    source => "puppet://${server}/modules/reprepro/inoticoming.init",
+  }
+  file { '/etc/default/reprepro':
+    ensure  => $inoticoming_presence,
+    owner   => root, group => root, mode => 0755,
+    content => template('reprepro/inoticoming.default.erb'),
+  }
+
+  service { 'reprepro':
+    ensure => $inoticoming_enabled,
+    enable => $inoticoming_enabled,
+    pattern => 'inoticoming.*reprepro.*processincoming',
+    hasstatus => false,
+    require => [ Package['inoticoming'],
+                 File['/etc/default/reprepro'],
+                 File['/etc/init.d/reprepro'] ],
+  }
 
   exec {
     "/usr/local/bin/reprepro-export-key":
