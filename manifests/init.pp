@@ -33,62 +33,61 @@ class reprepro (
     group => reprepro,
   }
 
-  file {
-    "$basedir":
+  file { "$basedir":
     ensure => directory,
-    mode => $basedir_mode;
-
-    "$basedir/conf":
+    mode => $basedir_mode,
+  }
+  file { "$basedir/conf":
     ensure => directory,
-    mode => '0770';
-
-    "$basedir/db":
+    mode => '0770',
+  }
+  file { "$basedir/db":
     ensure => directory,
-    mode => '0770';
-
-    "$basedir/dists":
+    mode => '0770',
+  }
+  file { "$basedir/dists":
     ensure => directory,
-    mode => '0775';
-
-    "$basedir/pool":
+    mode => '0775',
+  }
+  file { "$basedir/pool":
     ensure => directory,
-    mode => '0775';
-
-    "$basedir/incoming":
+    mode => '0775',
+  }
+  file { "$basedir/incoming":
     ensure => directory,
-    mode => $incoming_mode;
-
-    "$basedir/logs":
+    mode => $incoming_mode,
+  }
+  file { "$basedir/logs":
     ensure => directory,
-    mode => '0775';
-
-    "$basedir/tmp":
+    mode => '0775',
+  }
+  file { "$basedir/tmp":
     ensure => directory,
-    mode => '0775';
-
-    "$basedir/conf/distributions":
-    ensure => present;
-
-    "$basedir/conf/uploaders":
+    mode => '0775',
+  }
+  file { "$basedir/conf/distributions":
+    ensure => present,
+  }
+  file { "$basedir/conf/uploaders":
     mode => '0660', owner => root,
-    content => template("reprepro/uploaders.erb");
-
-    "$basedir/conf/incoming":
-    ensure => present;
-
-    "$basedir/index.html":
+    content => template("reprepro/uploaders.erb"),
+  }
+  file { "$basedir/conf/incoming":
+    ensure => present,
+  }
+  file { "$basedir/index.html":
     mode => '0664', owner => root,
-    content => template("reprepro/index.html.erb");
-
-    "$basedir/.gnupg":
+    content => template("reprepro/index.html.erb"),
+  }
+  file { "$basedir/.gnupg":
     mode => '0700',
-    ensure => directory;
-
-    "$basedir/.gnupg/secring.gpg":
+    ensure => directory,
+  }
+  file { "$basedir/.gnupg/secring.gpg":
     mode => '0600',
-    ensure => present;
-
-    "/usr/local/bin/reprepro-export-key":
+    ensure => present,
+  }
+  file { '/usr/local/bin/reprepro-export-key':
     ensure  => present,
     content => template('reprepro/reprepro-export-key.sh.erb'),
     owner   => root,
@@ -103,17 +102,17 @@ class reprepro (
       content => template("reprepro/distributions.erb"),
     }
 
-    exec {
-      "reprepro -b $basedir createsymlinks":
+    exec { "reprepro -b $basedir createsymlinks":
         refreshonly => true,
         subscribe => File["$basedir/conf/distributions"],
         user => reprepro,
-        path => "/usr/bin:/bin";
-      "reprepro -b $basedir export":
+        path => "/usr/bin:/bin",
+    }
+    exec { "reprepro -b $basedir export":
         refreshonly => true,
         user => reprepro,
         subscribe => File["$basedir/conf/distributions"],
-        path => "/usr/bin:/bin";
+        path => "/usr/bin:/bin",
     }
   }
 
