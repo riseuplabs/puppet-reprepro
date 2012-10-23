@@ -21,17 +21,8 @@ class reprepro {
     default => $reprepro_basedir,
   }
 
-  case $lsbdistcodename {
-    etch: { 
-      package {
-        "reprepro": ensure => '3.9.2-1~bpo40+1';
-      }
-    }
-    default: {
-      package {
-        "reprepro": ensure => 'installed';
-      }
-    }
+  package {
+    "reprepro": ensure => 'installed';
   }
 
   $basedir_mode = $reprepro_basedir_mode ? {
