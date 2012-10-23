@@ -1,4 +1,7 @@
 #! /bin/sh
+#
+# This file is managed by Puppet. Do not edit, any changes will be overwritten!
+#
 ### BEGIN INIT INFO
 # Provides:          reprepro
 # Required-Start:    $local_fs $syslog
