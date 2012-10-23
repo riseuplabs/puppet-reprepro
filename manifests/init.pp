@@ -125,7 +125,7 @@ class reprepro (
     File["$basedir/conf/incoming"] {
       mode => 0664,
       owner => root,
-      source => "puppet://$server/modules/reprepro/incoming"
+      source => "puppet:///modules/reprepro/incoming"
     }
   }
 
@@ -164,7 +164,7 @@ class reprepro (
     owner  => root,
     group  => root,
     mode   => 0755,
-    source => "puppet://${server}/modules/reprepro/inoticoming.init",
+    source => "puppet:///modules/reprepro/inoticoming.init",
   }
   file { '/etc/default/reprepro':
     ensure  => $inoticoming_presence,
