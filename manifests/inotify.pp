@@ -21,17 +21,11 @@ class reprepro::inotify inherits reprepro {
       content => template('reprepro/inoticoming.default.erb'),
   }
 
-  exec { "reprepro_init_script":
-      command => "/usr/sbin/update-rc.d reprepro defaults",
-      unless => "/bin/ls /etc/rc3.d/ | /bin/grep reprepro",
-      require => File["/etc/init.d/reprepro"],
-  }
   service { "reprepro":
       ensure => "running",
       pattern => "inoticoming.*reprepro.*processincoming",
       hasstatus => false,
       require => [File["/etc/default/reprepro"],
-                  Exec["reprepro_init_script"],
                   File["/etc/init.d/reprepro"] ],
   }
 }
