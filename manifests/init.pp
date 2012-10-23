@@ -91,7 +91,7 @@ class reprepro {
     content => template("reprepro/uploaders.erb");
 
     "$basedir/conf/incoming":
-    mode => 0664, owner => root, group => reprepro;
+    ensure => present;
 
     "$basedir/index.html":
     mode => 0664, owner => root, group => reprepro,
@@ -137,6 +137,9 @@ class reprepro {
 
   if $reprepro_manage_incoming_conf {
     File["$basedir/conf/incoming"] {
+      mode => 0664,
+      owner => root,
+      group => reprepro,
       source => "puppet://$server/modules/reprepro/incoming"
     }
   }
