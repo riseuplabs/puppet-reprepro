@@ -10,6 +10,14 @@ existence, ownership and permissions are.
 
 Default: true.
 
+$reprepro_basedir_mode
+-----------------------
+
+This module manages the reprepro base directory and sets its
+permissions to $reprepro_basedir_mode.
+
+Default: 0771
+
 $reprepro_incoming_mode
 -----------------------
 

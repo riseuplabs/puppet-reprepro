@@ -34,6 +34,11 @@ class reprepro {
     }
   }
 
+  $basedir_mode = $reprepro_basedir_mode ? {
+    ''      => 0771,
+    default => $reprepro_basedir_mode,
+  }
+
   $incoming_mode = $reprepro_incoming_mode ? {
     ''      => 1777,
     default => $reprepro_incoming_mode,
@@ -57,7 +62,7 @@ class reprepro {
   file {
     "$basedir":
     ensure => directory,
-    mode => 0771, owner => reprepro, group => reprepro;
+    mode => $basedir_mode, owner => reprepro, group => reprepro;
 
     "$basedir/conf":
     ensure => directory,
