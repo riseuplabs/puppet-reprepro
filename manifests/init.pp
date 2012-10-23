@@ -84,7 +84,7 @@ class reprepro {
     mode => 0775, owner => reprepro, group => reprepro;
 
     "$basedir/conf/distributions":
-    mode => 0664, owner => root, group => reprepro;
+    ensure => present;
 
     "$basedir/conf/uploaders":
     mode => 0660, owner => root, group => reprepro,
@@ -115,7 +115,23 @@ class reprepro {
 
   if $reprepro_manage_distributions_conf {
     File["$basedir/conf/distributions"] {
-      content => template("reprepro/distributions.erb")
+      owner   => root,
+      group   => reprepro,
+      mode    => 0664,
+      content => template("reprepro/distributions.erb"),
+    }
+
+    exec {
+      "reprepro -b $basedir createsymlinks":
+        refreshonly => true,
+        subscribe => File["$basedir/conf/distributions"],
+        user => reprepro,
+        path => "/usr/bin:/bin";
+      "reprepro -b $basedir export":
+        refreshonly => true,
+        user => reprepro,
+        subscribe => File["$basedir/conf/distributions"],
+        path => "/usr/bin:/bin";
     }
   }
 
@@ -125,17 +141,8 @@ class reprepro {
     }
   }
 
+
   exec {
-    "reprepro -b $basedir createsymlinks":
-      refreshonly => true,
-      subscribe => File["$basedir/conf/distributions"],
-      user => reprepro,
-      path => "/usr/bin:/bin";
-    "reprepro -b $basedir export":
-      refreshonly => true,
-      user => reprepro,
-      subscribe => File["$basedir/conf/distributions"],
-      path => "/usr/bin:/bin";
     "/usr/local/bin/reprepro-export-key":
       creates     => "$basedir/key.asc",
       user        => reprepro,
