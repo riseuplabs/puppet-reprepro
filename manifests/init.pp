@@ -40,19 +40,19 @@ class reprepro (
 
     "$basedir/conf":
     ensure => directory,
-    mode => 0770;
+    mode => '0770';
 
     "$basedir/db":
     ensure => directory,
-    mode => 0770;
+    mode => '0770';
 
     "$basedir/dists":
     ensure => directory,
-    mode => 0775;
+    mode => '0775';
 
     "$basedir/pool":
     ensure => directory,
-    mode => 0775;
+    mode => '0775';
 
     "$basedir/incoming":
     ensure => directory,
@@ -60,32 +60,32 @@ class reprepro (
 
     "$basedir/logs":
     ensure => directory,
-    mode => 0775;
+    mode => '0775';
 
     "$basedir/tmp":
     ensure => directory,
-    mode => 0775;
+    mode => '0775';
 
     "$basedir/conf/distributions":
     ensure => present;
 
     "$basedir/conf/uploaders":
-    mode => 0660, owner => root,
+    mode => '0660', owner => root,
     content => template("reprepro/uploaders.erb");
 
     "$basedir/conf/incoming":
     ensure => present;
 
     "$basedir/index.html":
-    mode => 0664, owner => root,
+    mode => '0664', owner => root,
     content => template("reprepro/index.html.erb");
 
     "$basedir/.gnupg":
-    mode => 700,
+    mode => '0700',
     ensure => directory;
 
     "$basedir/.gnupg/secring.gpg":
-    mode => 600,
+    mode => '0600',
     ensure => present;
 
     "/usr/local/bin/reprepro-export-key":
@@ -93,13 +93,13 @@ class reprepro (
     content => template('reprepro/reprepro-export-key.sh.erb'),
     owner   => root,
     group   => root,
-    mode    => 755,
+    mode    => '0755',
   }
 
   if $manage_distributions_conf {
     File["$basedir/conf/distributions"] {
       owner   => root,
-      mode    => 0664,
+      mode    => '0664',
       content => template("reprepro/distributions.erb"),
     }
 
@@ -119,7 +119,7 @@ class reprepro (
 
   if $manage_incoming_conf {
     File["$basedir/conf/incoming"] {
-      mode => 0664,
+      mode => '0664',
       owner => root,
       source => "puppet:///modules/reprepro/incoming"
     }
@@ -159,12 +159,12 @@ class reprepro (
     ensure => $inoticoming_presence,
     owner  => root,
     group  => root,
-    mode   => 0755,
+    mode   => '0755',
     source => "puppet:///modules/reprepro/inoticoming.init",
   }
   file { '/etc/default/reprepro':
     ensure  => $inoticoming_presence,
-    owner   => root, group => root, mode => 0755,
+    owner   => root, group => root, mode => '0755',
     content => template('reprepro/inoticoming.default.erb'),
   }
 
