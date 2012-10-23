@@ -141,7 +141,8 @@ class reprepro (
     command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
     user    => reprepro,
     minute  => '*/5',
-    require => [ Package['reprepro'], File["$basedir/conf/distributions"] ],
+    require => [ Package['reprepro'], File["$basedir/conf/distributions"],
+                 File["$basedir/incoming"], ],
   }
 
   # Handling of incoming with inoticoming
@@ -178,7 +179,8 @@ class reprepro (
     hasstatus => false,
     require => [ Package['inoticoming'],
                  File['/etc/default/reprepro'],
-                 File['/etc/init.d/reprepro'] ],
+                 File['/etc/init.d/reprepro'],
+                 File["$basedir/incoming"] ],
   }
 
   exec {
