@@ -65,20 +65,15 @@ class reprepro (
     ensure => directory,
     mode => '0775',
   }
-  file { "$basedir/conf/distributions":
-    ensure => present,
-  }
   file { "$basedir/conf/uploaders":
     mode => '0660', owner => root,
     content => template("reprepro/uploaders.erb"),
-  }
-  file { "$basedir/conf/incoming":
-    ensure => present,
   }
   file { "$basedir/index.html":
     mode => '0664', owner => root,
     content => template("reprepro/index.html.erb"),
   }
+
   file { "$basedir/.gnupg":
     mode => '0700',
     ensure => directory,
@@ -94,7 +89,17 @@ class reprepro (
     group   => root,
     mode    => '0755',
   }
+  exec { "/usr/local/bin/reprepro-export-key":
+    creates     => "$basedir/key.asc",
+    user        => reprepro,
+    subscribe   => File["$basedir/.gnupg/secring.gpg"],
+    require     => File["/usr/local/bin/reprepro-export-key"],
+  }
 
+
+  file { "$basedir/conf/distributions":
+    ensure => present,
+  }
   if $manage_distributions_conf {
     File["$basedir/conf/distributions"] {
       owner   => root,
@@ -116,6 +121,9 @@ class reprepro (
     }
   }
 
+  file { "$basedir/conf/incoming":
+    ensure => present,
+  }
   if $manage_incoming_conf {
     File["$basedir/conf/incoming"] {
       mode => '0664',
@@ -176,14 +184,6 @@ class reprepro (
                  File['/etc/default/reprepro'],
                  File['/etc/init.d/reprepro'],
                  File["$basedir/incoming"] ],
-  }
-
-  exec {
-    "/usr/local/bin/reprepro-export-key":
-      creates     => "$basedir/key.asc",
-      user        => reprepro,
-      subscribe   => File["$basedir/.gnupg/secring.gpg"],
-      require     => File["/usr/local/bin/reprepro-export-key"],
   }
 
 # TODO: setup needeed lines in apache site config file
