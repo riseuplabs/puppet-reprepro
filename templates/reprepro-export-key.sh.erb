@@ -9,7 +9,7 @@ if [ -n "$KEY" ]; then
 	TEMPFILE=$(mktemp)
 	trap "rm -f '$TEMPFILE'" EXIT
 	DESTFILE='<%= @basedir %>/key.asc'
-	gpg --homedir '<%= @basedir %>/.gnupg' --export --armor $KEY > "$TEMPFILE"
+	gpg --homedir '<%= @basedir %>/.gnupg' --export --armor "$KEY" > "$TEMPFILE"
 	mv "$TEMPFILE" "$DESTFILE"
 	chown reprepro:reprepro "$DESTFILE"
 	chmod 0664 "$DESTFILE"
