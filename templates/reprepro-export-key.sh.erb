@@ -3,6 +3,8 @@
 # This file is managed by Puppet. Do not edit, any changes will be overwritten!
 #
 
+set -e
+
 KEY="$(gpg --homedir '<%= @basedir %>/.gnupg' --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1)"
 
 if [ -n "$KEY" ]; then
