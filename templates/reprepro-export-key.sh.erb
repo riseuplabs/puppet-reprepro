@@ -6,7 +6,7 @@
 KEY="$(gpg --homedir '<%= @basedir %>/.gnupg' --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1)"
 
 if [ -n "$KEY" ]; then
-	TEMPFILE=$(mktemp)
+	TEMPFILE=$(mktemp --tmpdir='<%= @basedir %>')
 	trap "rm -f '$TEMPFILE'" EXIT
 	DESTFILE='<%= @basedir %>/key.asc'
 	gpg --homedir '<%= @basedir %>/.gnupg' --export --armor "$KEY" > "$TEMPFILE"
