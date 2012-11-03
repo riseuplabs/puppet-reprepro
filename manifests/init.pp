@@ -179,7 +179,6 @@ class reprepro (
     ensure => $inoticoming_enabled,
     enable => $inoticoming_enabled,
     pattern => 'inoticoming.*reprepro.*processincoming',
-    hasstatus => false,
     require => [ Package['inoticoming'],
                  File['/etc/default/reprepro'],
                  File['/etc/init.d/reprepro'],
