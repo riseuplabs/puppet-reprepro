@@ -21,6 +21,7 @@ NAME=reprepro
 DAEMON=/usr/bin/inoticoming
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
+USER=root
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
