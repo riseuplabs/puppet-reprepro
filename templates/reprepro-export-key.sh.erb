@@ -6,10 +6,10 @@
 KEY="$(gpg --homedir <%= @basedir %>/.gnupg --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1)"
 
 if [ -n "$KEY" ]; then
-  tempfile=$(mktemp)
-  destfile=<%= @basedir %>/key.asc
-  gpg --homedir <%= @basedir %>/.gnupg --export --armor $KEY > "$tempfile"
-  mv    "$tempfile"       "$destfile"
-  chown reprepro:reprepro "$destfile"
-  chmod 0664              "$destfile"
+	tempfile=$(mktemp)
+	destfile=<%= @basedir %>/key.asc
+	gpg --homedir <%= @basedir %>/.gnupg --export --armor $KEY > "$tempfile"
+	mv "$tempfile" "$destfile"
+	chown reprepro:reprepro "$destfile"
+	chmod 0664 "$destfile"
 fi
