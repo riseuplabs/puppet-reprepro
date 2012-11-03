@@ -13,13 +13,8 @@
 #                    managed by reprepro.
 ### END INIT INFO
 
-# Copyright (c) 2008 by Tilman Koschnick <til@subnetz.org>
-# Based on /etc/init.d/skeleton from Debian package initscripts
-# Distributed under the GPLv2
-
 # Do NOT "set -e"
 
-# PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="reprepro incoming queue monitor"
 NAME=reprepro
