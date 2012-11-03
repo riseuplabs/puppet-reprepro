@@ -75,12 +75,12 @@ class reprepro (
   }
 
   file { "$basedir/.gnupg":
-    mode => '0700',
     ensure => directory,
+    mode => '0700',
   }
   file { "$basedir/.gnupg/secring.gpg":
-    mode => '0600',
     ensure => present,
+    mode => '0600',
   }
   file { '/usr/local/bin/reprepro-export-key':
     ensure  => present,
