@@ -3,7 +3,7 @@
 # This file is managed by Puppet. Do not edit, any changes will be overwritten!
 #
 
-KEY="`gpg --homedir <%= @basedir %>/.gnupg --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1`"
+KEY="$(gpg --homedir <%= @basedir %>/.gnupg --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1)"
 
 if [ ! -z "$KEY" ]; then
   tempfile=$(mktemp)
