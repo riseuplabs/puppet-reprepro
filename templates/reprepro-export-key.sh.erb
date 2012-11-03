@@ -5,7 +5,7 @@
 
 KEY="$(gpg --homedir <%= @basedir %>/.gnupg --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1)"
 
-if [ ! -z "$KEY" ]; then
+if [ -n "$KEY" ]; then
   tempfile=$(mktemp)
   destfile=<%= @basedir %>/key.asc
   gpg --homedir <%= @basedir %>/.gnupg --export --armor $KEY > "$tempfile"
