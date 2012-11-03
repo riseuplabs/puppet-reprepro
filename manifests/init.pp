@@ -1,5 +1,5 @@
 class reprepro (
-  $uploaders = 'undefined',
+  $uploaders,
   $basedir = '/srv/reprepro',
   $origin  = $::domain,
   $basedir_mode  = '0771',
@@ -11,10 +11,6 @@ class reprepro (
 ){
   package {
     "reprepro": ensure => 'installed';
-  }
-
-  if $uploaders == 'undefined' {
-    fail("The uploaders parameter is required by the reprepro class.")
   }
 
   user { "reprepro":
