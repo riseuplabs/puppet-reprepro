@@ -40,31 +40,31 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_start()
 {
-        # Return
-        #   0 if daemon has been started
-        #   1 if daemon was already running
-        #   2 if daemon could not be started
+	# Return
+	#   0 if daemon has been started
+	#   1 if daemon was already running
+	#   2 if daemon could not be started
 
-        # make sure inoticoming can write the PID to $PIDFILE
-        [ -f $PIDFILE ] || touch $PIDFILE
-        chown $USER $PIDFILE
-        OPTIONS="--pid-file $PIDFILE"
+	# make sure inoticoming can write the PID to $PIDFILE
+	[ -f $PIDFILE ] || touch $PIDFILE
+	chown $USER $PIDFILE
+	OPTIONS="--pid-file $PIDFILE"
 
-        # make sure inoticoming can write to $LOGFILE
-        if [ -n $LOGFILE ] ; then
-                [ -f $LOGFILE ] || touch $LOGFILE
-                chown $USER $LOGFILE
-                OPTIONS="$OPTIONS --logfile $LOGFILE"
-        fi
+	# make sure inoticoming can write to $LOGFILE
+	if [ -n $LOGFILE ] ; then
+		[ -f $LOGFILE ] || touch $LOGFILE
+		chown $USER $LOGFILE
+		OPTIONS="$OPTIONS --logfile $LOGFILE"
+	fi
 
-        # should we do an initial search of the directory?
-        [ "$INITIALSEARCH" != "0" ] && OPTIONS="$OPTIONS --initialsearch"
+	# should we do an initial search of the directory?
+	[ "$INITIALSEARCH" != "0" ] && OPTIONS="$OPTIONS --initialsearch"
 
-        start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
-                || return 1
-        start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --chuid $USER -- \
-                $OPTIONS $DIR $ACTIONS \
-                || return 2
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+		|| return 1
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --chuid $USER -- \
+		$OPTIONS $DIR $ACTIONS \
+		|| return 2
 }
 
 #
@@ -72,57 +72,57 @@ do_start()
 #
 do_stop()
 {
-        # Return
-        #   0 if daemon has been stopped
-        #   1 if daemon was already stopped
-        #   2 if daemon could not be stopped
-        #   other if a failure occurred
-        start-stop-daemon --stop --quiet --pidfile $PIDFILE
-        RETVAL="$?"
-        [ "$RETVAL" = 2 ] && return 2
-        rm -f $PIDFILE
-        return "$RETVAL"
+	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   2 if daemon could not be stopped
+	#   other if a failure occurred
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE
+	RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
+	rm -f $PIDFILE
+	return "$RETVAL"
 }
 
 case "$1" in
-  start)
-        [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-        do_start
-        case "$?" in
-                0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-                2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-        esac
-        ;;
-  stop)
-        [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-        do_stop
-        case "$?" in
-                0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-                2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-        esac
-        ;;
-  restart|force-reload)
-        log_daemon_msg "Restarting $DESC" "$NAME"
-        do_stop
-        case "$?" in
-          0|1)
-                do_start
-                case "$?" in
-                        0) log_end_msg 0 ;;
-                        1) log_end_msg 1 ;; # Old process is still running
-                        *) log_end_msg 1 ;; # Failed to start
-                esac
-                ;;
-          *)
-                # Failed to stop
-                log_end_msg 1
-                ;;
-        esac
-        ;;
-  *)
-        echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
-        exit 3
-        ;;
+    start)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+	do_start
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+    stop)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+	do_stop
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+    restart|force-reload)
+	log_daemon_msg "Restarting $DESC" "$NAME"
+	do_stop
+	case "$?" in
+	    0|1)
+		do_start
+		case "$?" in
+			0) log_end_msg 0 ;;
+			1) log_end_msg 1 ;; # Old process is still running
+			*) log_end_msg 1 ;; # Failed to start
+		esac
+		;;
+	    *)
+		# Failed to stop
+		log_end_msg 1
+		;;
+	esac
+	;;
+    *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 3
+	;;
 esac
 
 :
