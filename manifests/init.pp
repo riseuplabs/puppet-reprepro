@@ -2,6 +2,7 @@ class reprepro (
   $uploaders,
   $basedir = '/srv/reprepro',
   $origin  = $::domain,
+  $architectures  = [ 'amd64', 'i386', 'source' ],
   $basedir_mode  = '0771',
   $incoming_mode = '1777',
   $manage_distributions_conf    = true,

@@ -5,7 +5,7 @@ Label: <%= @origin %>
 Suite: reallyoldstable
 Codename: etch
 Version: 3.0
-Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
+Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
 SignWith: yes
@@ -17,7 +17,7 @@ Suite: oldstable
 Pull: stable
 Codename: lenny
 Version: 5.0
-Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
+Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
 SignWith: yes
@@ -29,7 +29,7 @@ Suite: stable
 Pull: testing
 Codename: squeeze
 Version: 6.0
-Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
+Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
 SignWith: yes
@@ -40,7 +40,7 @@ Label: <%= @origin %>
 Suite: testing
 Pull: unstable
 Codename: wheezy
-Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
+Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
 SignWith: yes
@@ -50,7 +50,7 @@ Origin: <%= @origin %>
 Label: <%= @origin %>
 Suite: unstable
 Codename: sid
-Architectures: i386 amd64 source kfreebsd-amd64 kfreebsd-i386
+Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
 SignWith: yes
