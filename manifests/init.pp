@@ -1,15 +1,4 @@
-class reprepro (
-  $uploaders,
-  $basedir = '/srv/reprepro',
-  $origin  = $::domain,
-  $architectures  = [ 'amd64', 'i386', 'source' ],
-  $basedir_mode  = '0771',
-  $incoming_mode = '1777',
-  $manage_distributions_conf    = true,
-  $manage_incoming_conf         = true,
-  $handle_incoming_with_cron    = false,
-  $handle_incoming_with_inotify = false
-){
+class reprepro {
   package {
     "reprepro": ensure => 'installed';
   }
@@ -28,6 +17,35 @@ class reprepro (
       ensure => present,
     }
   }
+
+  file { '/usr/local/bin/reprepro-export-key':
+    ensure  => present,
+    source => "puppet:///modules/reprepro/reprepro-export-key.sh",
+    owner   => root,
+    group   => root,
+    mode    => '0755',
+  }
+}
+
+class reprepro::inotify {
+  package { 'inoticoming':
+    ensure => 'present',
+  }
+}
+
+define reprepro::repository (
+  $uploaders,
+  $basedir = '/srv/reprepro',
+  $origin  = $::domain,
+  $architectures  = [ 'amd64', 'i386', 'source' ],
+  $basedir_mode  = '0771',
+  $incoming_mode = '1777',
+  $manage_distributions_conf    = true,
+  $manage_incoming_conf         = true,
+  $handle_incoming_with_cron    = false,
+  $handle_incoming_with_inotify = false
+) {
+  include reprepro
 
   File {
     owner => reprepro,
@@ -83,14 +101,8 @@ class reprepro (
     ensure => present,
     mode => '0600',
   }
-  file { '/usr/local/bin/reprepro-export-key':
-    ensure  => present,
-    content => template('reprepro/reprepro-export-key.sh.erb'),
-    owner   => root,
-    group   => root,
-    mode    => '0755',
-  }
-  exec { "/usr/local/bin/reprepro-export-key":
+
+  exec { "/usr/local/bin/reprepro-export-key '$basedir'":
     creates     => "$basedir/key.asc",
     user        => reprepro,
     subscribe   => File["$basedir/.gnupg/secring.gpg"],
@@ -140,7 +152,7 @@ class reprepro (
     default => absent,
   }
 
-  cron { 'reprepro':
+  cron { "reprepro-$name":
     ensure  => $cron_presence,
     command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
     user    => reprepro,
@@ -160,9 +172,10 @@ class reprepro (
     default => false,
   }
 
-  package { 'inoticoming':
-    ensure => $inoticoming_presence,
+  if $handle_incoming_with_inotify {
+    include reprepro::inotify
   }
+
   file { '/etc/init.d/reprepro':
     ensure => $inoticoming_presence,
     owner  => root,
