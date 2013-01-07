@@ -1,0 +1,27 @@
+Parameters
+==========
+
+manage_distributions_conf, manage_incoming_conf
+-----------------------------------------------
+
+If true, the content of -respectively- the conf/distributions and
+conf/incoming files is managed by this module. Else, only the
+existence, ownership and permissions are.
+
+Default: true.
+
+basedir_mode
+------------
+
+This module manages the reprepro base directory and sets its
+permissions to `basedir_mode`.
+
+Default: 0771
+
+incoming_mode
+-------------
+
+This module manages the reprepro incoming directory and sets its
+permissions to `incoming_mode`.
+
+Default: 1777

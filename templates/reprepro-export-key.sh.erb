@@ -1,7 +1,18 @@
-#!/bin/bash
+#!/bin/sh
+#
+# This file is managed by Puppet. Do not edit, any changes will be overwritten!
+#
 
-KEY="`gpg --homedir <%= basedir %>/.gnupg --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1`"
+set -e
 
-if [ ! -z "$KEY" ]; then
-  gpg --homedir <%= basedir %>/.gnupg --export --armor $KEY > <%= basedir %>/key.asc
+KEY="$(gpg --homedir '<%= @basedir %>/.gnupg' --with-colon --list-secret-keys | cut -d : -f 5 | head -n 1)"
+
+if [ -n "$KEY" ]; then
+	TEMPFILE=$(mktemp --tmpdir='<%= @basedir %>')
+	trap "rm -f '$TEMPFILE'" EXIT
+	DESTFILE='<%= @basedir %>/key.asc'
+	gpg --homedir '<%= @basedir %>/.gnupg' --export --armor "$KEY" > "$TEMPFILE"
+	mv "$TEMPFILE" "$DESTFILE"
+	chown reprepro:reprepro "$DESTFILE"
+	chmod 0664 "$DESTFILE"
 fi

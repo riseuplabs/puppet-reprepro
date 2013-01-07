@@ -1,3 +1,5 @@
+# This file is managed by Puppet. Do not edit, any changes will be overwritten!
+
 # /etc/default/inoticoming
 #
 # for an explanation of options and actions, see inoticoming(1)
@@ -11,12 +13,12 @@ LOGFILE="/var/log/incoming.log"
 
 # first search the directory for files already existing
 # 0 for false, 1 for true
-INITIALSEARCH=0
+INITIALSEARCH=1
 
 # directory to monitor
-DIR=<%= basedir %>/incoming
+DIR=<%= @basedir %>/incoming
 
 # actions
-BASEDIR=<%= basedir %>
+BASEDIR=<%= @basedir %>
 RULENAME=incoming
 ACTIONS="--suffix .changes --stderr-to-log reprepro -s -b $BASEDIR --waitforlock 1000 processincoming $RULENAME {} ;"

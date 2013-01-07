@@ -1,31 +1,16 @@
-class reprepro {
-
-  case $reprepro_origin {
-    '': { $reprepro_origin = $domain }
-  }
-
-  case $reprepro_uploaders {
-    '': { fail("You need the repository uploaders! Please set \$reprepro_uploaders in your config") }
-  }
-
-  $basedir = $reprepro_basedir ? {
-    ''      => '/srv/reprepro',
-    default => $reprepro_basedir,
-  }
-
-  case $lsbdistcodename {
-    etch: { 
-      package {
-        "reprepro": ensure => '3.9.2-1~bpo40+1';
-        "inoticoming": ensure => '0.2.0-1~bpo40+1';
-      }
-    }
-    default: {
-      package {
-        "reprepro": ensure => 'installed';
-        "inoticoming": ensure => 'installed';
-      }
-    }
+class reprepro (
+  $uploaders,
+  $basedir = '/srv/reprepro',
+  $origin  = $::domain,
+  $basedir_mode  = '0771',
+  $incoming_mode = '1777',
+  $manage_distributions_conf    = true,
+  $manage_incoming_conf         = true,
+  $handle_incoming_with_cron    = false,
+  $handle_incoming_with_inotify = false,
+){
+  package {
+    "reprepro": ensure => 'installed';
   }
 
   user { "reprepro":
@@ -43,125 +28,163 @@ class reprepro {
     }
   }
 
-  file {
-    "$basedir":
+  File {
+    owner => reprepro,
+    group => reprepro,
+  }
+
+  file { "$basedir":
     ensure => directory,
-    mode => 0771, owner => reprepro, group => reprepro;
-
-    "$basedir/conf":
+    mode => $basedir_mode,
+  }
+  file { "$basedir/conf":
     ensure => directory,
-    mode => 0770, owner => root, group => reprepro;
-
-    "$basedir/db":
+    mode => '0770',
+  }
+  file { "$basedir/db":
     ensure => directory,
-    mode => 0770, owner => reprepro, group => reprepro;
-
-    "$basedir/dists":
+    mode => '0770',
+  }
+  file { "$basedir/dists":
     ensure => directory,
-    mode => 0775, owner => reprepro, group => reprepro;
-
-    "$basedir/pool":
+    mode => '0775',
+  }
+  file { "$basedir/pool":
     ensure => directory,
-    mode => 0775, owner => reprepro, group => reprepro;
-
-    "$basedir/incoming":
+    mode => '0775',
+  }
+  file { "$basedir/incoming":
     ensure => directory,
-    mode => 1777, owner => reprepro, group => reprepro;
-
-    "$basedir/logs":
+    mode => $incoming_mode,
+  }
+  file { "$basedir/logs":
     ensure => directory,
-    mode => 0775, owner => reprepro, group => reprepro;
-
-    "$basedir/tmp":
+    mode => '0775',
+  }
+  file { "$basedir/tmp":
     ensure => directory,
-    mode => 0775, owner => reprepro, group => reprepro;
+    mode => '0775',
+  }
+  file { "$basedir/conf/uploaders":
+    mode => '0660', owner => root,
+    content => template("reprepro/uploaders.erb"),
+  }
+  file { "$basedir/index.html":
+    mode => '0664', owner => root,
+    content => template("reprepro/index.html.erb"),
+  }
 
-    "$basedir/conf/distributions":
-    mode => 0664, owner => root, group => reprepro,
-    content => template("reprepro/distributions.erb");
-
-    "$basedir/conf/uploaders":
-    mode => 0660, owner => root, group => reprepro,
-    content => template("reprepro/uploaders.erb");
-
-    "$basedir/conf/incoming":
-    mode => 0664, owner => root, group => reprepro,
-    source => "puppet://$server/modules/reprepro/incoming";
-
-    "$basedir/index.html":
-    mode => 0664, owner => root, group => reprepro,
-    content => template("reprepro/index.html.erb");
-
-    "$basedir/.gnupg":
-    mode => 700, owner => reprepro, group => reprepro,
-    ensure => directory;
-
-    "$basedir/.gnupg/secring.gpg":
-    mode => 600, owner => reprepro, group => reprepro,
-    ensure => present;
-
-    "/usr/local/bin/reprepro-export-key":
+  file { "$basedir/.gnupg":
+    ensure => directory,
+    mode => '0700',
+  }
+  file { "$basedir/.gnupg/secring.gpg":
+    ensure => present,
+    mode => '0600',
+  }
+  file { '/usr/local/bin/reprepro-export-key':
     ensure  => present,
     content => template('reprepro/reprepro-export-key.sh.erb'),
     owner   => root,
     group   => root,
-    mode    => 755,
+    mode    => '0755',
+  }
+  exec { "/usr/local/bin/reprepro-export-key":
+    creates     => "$basedir/key.asc",
+    user        => reprepro,
+    subscribe   => File["$basedir/.gnupg/secring.gpg"],
+    require     => File["/usr/local/bin/reprepro-export-key"],
   }
 
-  exec {
-    "reprepro -b $basedir createsymlinks":
-      refreshonly => true,
-      subscribe => File["$basedir/conf/distributions"],
-      user => reprepro,
-      path => "/usr/bin:/bin";
-    "reprepro -b $basedir export":
-      refreshonly => true,
-      user => reprepro,
-      subscribe => File["$basedir/conf/distributions"],
-      path => "/usr/bin:/bin";
-    "/usr/local/bin/reprepro-export-key":
-      creates     => "$basedir/key.asc",
-      user        => reprepro,
-      subscribe   => File["$basedir/.gnupg/secring.gpg"],
-      require     => File["/usr/local/bin/reprepro-export-key"],
-      refreshonly => true,
+
+  file { "$basedir/conf/distributions":
+    ensure => present,
+  }
+  if $manage_distributions_conf {
+    File["$basedir/conf/distributions"] {
+      owner   => root,
+      mode    => '0664',
+      content => template("reprepro/distributions.erb"),
+    }
+
+    exec { "reprepro -b $basedir createsymlinks":
+        refreshonly => true,
+        subscribe => File["$basedir/conf/distributions"],
+        user => reprepro,
+        path => "/usr/bin:/bin",
+    }
+    exec { "reprepro -b $basedir export":
+        refreshonly => true,
+        user => reprepro,
+        subscribe => File["$basedir/conf/distributions"],
+        path => "/usr/bin:/bin",
+    }
+  }
+
+  file { "$basedir/conf/incoming":
+    ensure => present,
+  }
+  if $manage_incoming_conf {
+    File["$basedir/conf/incoming"] {
+      mode => '0664',
+      owner => root,
+      source => "puppet:///modules/reprepro/incoming"
+    }
+  }
+
+  # Handling of incoming with cron
+
+  $cron_presence = $handle_incoming_with_cron ? {
+    true    => present,
+    default => absent,
+  }
+
+  cron { 'reprepro':
+    ensure  => $cron_presence,
+    command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
+    user    => reprepro,
+    minute  => '*/5',
+    require => [ Package['reprepro'], File["$basedir/conf/distributions"],
+                 File["$basedir/incoming"], ],
+  }
+
+  # Handling of incoming with inoticoming
+
+  $inoticoming_presence = $handle_incoming_with_inotify ? {
+    true    => present,
+    default => absent,
+  }
+  $inoticoming_enabled = $handle_incoming_with_inotify ? {
+    true    => true,
+    default => false,
+  }
+
+  package { 'inoticoming':
+    ensure => $inoticoming_presence,
+  }
+  file { '/etc/init.d/reprepro':
+    ensure => $inoticoming_presence,
+    owner  => root,
+    group  => root,
+    mode   => '0755',
+    source => "puppet:///modules/reprepro/inoticoming.init",
+  }
+  file { '/etc/default/reprepro':
+    ensure  => $inoticoming_presence,
+    owner   => root, group => root, mode => '0755',
+    content => template('reprepro/inoticoming.default.erb'),
+  }
+
+  service { 'reprepro':
+    ensure => $inoticoming_enabled,
+    enable => $inoticoming_enabled,
+    pattern => 'inoticoming.*reprepro.*processincoming',
+    require => [ Package['inoticoming'],
+                 File['/etc/default/reprepro'],
+                 File['/etc/init.d/reprepro'],
+                 File["$basedir/incoming"] ],
   }
 
 # TODO: setup needeed lines in apache site config file
 
-}
-
-class reprepro::cron inherits reprepro {
-  cron { reprepro:
-    command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
-    user => reprepro,
-    minute => '*/5',
-    require => [ Package['reprepro'], File["$basedir/conf/distributions"] ]
-  }
-}
-
-class reprepro::inotify inherits reprepro {
-  file { "/etc/init.d/reprepro":
-      owner => root, group => root, mode => 0755,
-      source => "puppet://$server/modules/reprepro/inoticoming.init";
-  }
-  file { "/etc/default/reprepro":
-      ensure => present,
-      owner => root, group => root, mode => 0755,
-      content => template('reprepro/inoticoming.default.erb'),
-  }
-
-  exec { "reprepro_init_script":
-      command => "/usr/sbin/update-rc.d reprepro defaults",
-      unless => "/bin/ls /etc/rc3.d/ | /bin/grep reprepro",
-      require => File["/etc/init.d/reprepro"],
-  }
-  service { "reprepro":
-      ensure => "running",
-      pattern => "inoticoming.*reprepro.*processincoming",
-      hasstatus => false,
-      require => [File["/etc/default/reprepro"],
-                  Exec["reprepro_init_script"],
-                  File["/etc/init.d/reprepro"] ],
-  }
 }
