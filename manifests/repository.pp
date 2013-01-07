@@ -1,5 +1,7 @@
 define reprepro::repository (
   $uploaders,
+  $user = 'reprepro',
+  $group = 'reprepro',
   $basedir = '/srv/reprepro',
   $origin  = $::domain,
   $architectures  = [ 'amd64', 'i386', 'source' ],
@@ -12,9 +14,26 @@ define reprepro::repository (
 ) {
   include reprepro
 
+  if !defined(User[$user]) {
+    user { $user:
+      ensure => "present",
+      home => "$basedir",
+      gid => $group,
+      password => "*",
+      comment => "reprepro sandbox",
+      require => Group[$group],
+    }
+  }
+
+  if !defined(Group[$group]) {
+    group { $group:
+      ensure => present,
+    }
+  }
+
   File {
-    owner => reprepro,
-    group => reprepro,
+    owner => $user,
+    group => $group,
   }
 
   file { "$basedir":
@@ -69,7 +88,7 @@ define reprepro::repository (
 
   exec { "/usr/local/bin/reprepro-export-key '$basedir'":
     creates     => "$basedir/key.asc",
-    user        => reprepro,
+    user        => $user,
     subscribe   => File["$basedir/.gnupg/secring.gpg"],
     require     => File["/usr/local/bin/reprepro-export-key"],
   }
@@ -88,12 +107,12 @@ define reprepro::repository (
     exec { "reprepro -b $basedir createsymlinks":
         refreshonly => true,
         subscribe => File["$basedir/conf/distributions"],
-        user => reprepro,
+        user => $user,
         path => "/usr/bin:/bin",
     }
     exec { "reprepro -b $basedir export":
         refreshonly => true,
-        user => reprepro,
+        user => $user,
         subscribe => File["$basedir/conf/distributions"],
         path => "/usr/bin:/bin",
     }
@@ -120,7 +139,7 @@ define reprepro::repository (
   cron { "reprepro-$name":
     ensure  => $cron_presence,
     command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
-    user    => reprepro,
+    user    => $user,
     minute  => '*/5',
     require => [ Package['reprepro'], File["$basedir/conf/distributions"],
                  File["$basedir/incoming"], ],
