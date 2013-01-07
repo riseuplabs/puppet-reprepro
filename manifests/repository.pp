@@ -160,6 +160,12 @@ define reprepro::repository (
     include reprepro::inotify
   }
 
+  if !defined(Package['inoticoming']) {
+    package { 'inoticoming':
+      ensure => $inoticoming_presence,
+    }
+  }
+
   file { '/etc/init.d/reprepro':
     ensure => $inoticoming_presence,
     owner  => root,
