@@ -156,10 +156,6 @@ define reprepro::repository (
     default => false,
   }
 
-  if $handle_incoming_with_inotify {
-    include reprepro::inotify
-  }
-
   if !defined(Package['inoticoming']) {
     package { 'inoticoming':
       ensure => $inoticoming_presence,
