@@ -21,6 +21,12 @@ Instead of:
 
   class { 'reprepro': origin => 'example.com' }
 
+Even more recent versions do not use parametrized classes anymore but
+defines, in order to support multiple repositories. So you should do
+instead:
+
+  reprepro::repository { "default": origin => 'example.com' }
+
 Parameters
 ==========
 
