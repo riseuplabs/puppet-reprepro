@@ -19,7 +19,7 @@ Instead of:
 
 ... you should use:
 
-  class { 'reprepro': origin => 'example.com }
+  class { 'reprepro': origin => 'example.com' }
 
 Even more recent versions do not use parametrized classes anymore but
 defines, in order to support multiple repositories. So you should do
