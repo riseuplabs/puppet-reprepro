@@ -14,11 +14,7 @@ define reprepro::repository (
 ) {
   include reprepro
 
-  if defined(User[$user]) {
-    User[$user] {
-      groups +> $group,
-    }
-  } else {
+  if !defined(User[$user]) {
     user { $user:
       ensure => "present",
       home => "$basedir",
