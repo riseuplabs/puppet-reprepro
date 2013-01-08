@@ -1,3 +1,26 @@
+Reprepro module for Puppet
+==========================
+
+This module allows you to create a reprepro install easily. It can
+configure cron or a inotify daemon to process the incoming queue and
+takes care of configuration, user creation and so on.
+
+Upgrading from previous versions
+================================
+
+Older version were using a single monolithic class with global
+variables. We are now using a parametrized class instead, so you need
+to port your manifests.
+
+Instead of:
+
+  $reprepro_origin = 'example.com'
+  include reprepro
+
+... you should use:
+
+  class { 'reprepro': origin => 'example.com }
+
 Parameters
 ==========
 
