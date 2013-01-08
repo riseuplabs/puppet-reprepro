@@ -73,7 +73,7 @@ define reprepro::repository (
     mode => '0775',
   }
   file { "$basedir/conf/uploaders":
-    mode => '0660', owner => root,
+    mode => '0640', owner => root,
     content => template("reprepro/uploaders.erb"),
   }
   file { "$basedir/index.html":
