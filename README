@@ -19,7 +19,7 @@ Instead of:
 
 ... you should use:
 
-  class { 'reprepro': origin => 'example.com }
+  class { 'reprepro': origin => 'example.com' }
 
 Parameters
 ==========
