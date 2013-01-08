@@ -4,8 +4,7 @@ Origin: <%= @origin %>
 Label: <%= @origin %>
 Suite: stable
 Pull: testing
-Codename: squeeze
-Version: 6.0
+Codename: stable
 Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
@@ -16,7 +15,7 @@ Origin: <%= @origin %>
 Label: <%= @origin %>
 Suite: testing
 Pull: unstable
-Codename: wheezy
+Codename: testing
 Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
@@ -26,7 +25,7 @@ Uploaders: uploaders
 Origin: <%= @origin %>
 Label: <%= @origin %>
 Suite: unstable
-Codename: sid
+Codename: unstable
 Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
 Description: <%= @origin %> specific (or backported) packages
