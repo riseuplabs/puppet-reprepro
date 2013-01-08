@@ -14,13 +14,13 @@ it for yourself, but it comes at no warranty.
 <p>In your /etc/apt/source.list:
 
 <pre>
-deb http://debian.<%= @domain %>/debian lenny main
-deb-src http://debian.<%= @domain %>/debian lenny main
+deb http://debian.<%= @domain %>/debian stable main
+deb-src http://debian.<%= @domain %>/debian stable main
 </pre>
 
-"lenny", of course, can be replaced by your distribution. Know that we usually
-package straight for etch or lenny. Packages will likely not be available in
-squeeze or sid.</p>
+<code>stable</code> can be replaced by <code>testing</code>
+or <code>unstable</code> if you wish to test the development version
+of packages.</p>
 
 <h2>Adding the archive key to your keyring</h2>
 
