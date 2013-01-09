@@ -60,6 +60,10 @@ define reprepro::repository (
     ensure => directory,
     mode => $incoming_mode,
   }
+  file { "$basedir/refused":
+    ensure => directory,
+    mode => 0775,
+  }
   file { "$basedir/logs":
     ensure => directory,
     mode => '0775',
