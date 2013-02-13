@@ -183,7 +183,7 @@ define reprepro::repository (
     ensure  => $inoticoming_enabled,
     enable  => $inoticoming_enabled,
     pattern => 'inoticoming.*reprepro.*processincoming',
-    require => [ Package['inoticoming'],
+    require => [ Package['reprepro'], Package['inoticoming'],
                  File['/etc/default/reprepro'],
                  File['/etc/init.d/reprepro'],
                  File["${basedir}/incoming"] ],
