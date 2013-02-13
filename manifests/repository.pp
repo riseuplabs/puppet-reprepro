@@ -10,7 +10,8 @@ define reprepro::repository (
   $manage_distributions_conf    = true,
   $manage_incoming_conf         = true,
   $handle_incoming_with_cron    = false,
-  $handle_incoming_with_inotify = false
+  $handle_incoming_with_inotify = false,
+  $signwith = 'yes'
 ) {
   include reprepro
 
