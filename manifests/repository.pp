@@ -10,7 +10,8 @@ define reprepro::repository (
   $manage_distributions_conf    = true,
   $manage_incoming_conf         = true,
   $handle_incoming_with_cron    = false,
-  $handle_incoming_with_inotify = false
+  $handle_incoming_with_inotify = false,
+  $incoming_source = 'puppet:///modules/reprepro/incoming',
 ) {
   include reprepro
 
@@ -127,7 +128,7 @@ define reprepro::repository (
     File["${basedir}/conf/incoming"] {
       mode   => '0664',
       owner  => root,
-      source => 'puppet:///modules/reprepro/incoming'
+      source => $incoming_source
     }
   }
 
