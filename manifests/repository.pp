@@ -10,7 +10,8 @@ define reprepro::repository (
   $manage_distributions_conf    = true,
   $manage_incoming_conf         = true,
   $handle_incoming_with_cron    = false,
-  $handle_incoming_with_inotify = false
+  $handle_incoming_with_inotify = false,
+  $distributions_template = 'reprepro/distributions.erb'
 ) {
   include reprepro
 
@@ -103,7 +104,7 @@ define reprepro::repository (
     File["${basedir}/conf/distributions"] {
       owner   => root,
       mode    => '0664',
-      content => template('reprepro/distributions.erb'),
+      content => template($distributions_template),
     }
 
     exec { "reprepro -b ${basedir} createsymlinks":
