@@ -16,12 +16,12 @@ define reprepro::repository (
 
   if !defined(User[$user]) {
     user { $user:
-      ensure => "present",
-      home => "$basedir",
-      gid => $group,
-      password => "*",
-      comment => "reprepro sandbox",
-      require => Group[$group],
+      ensure   => 'present',
+      home     => $basedir,
+      gid      => $group,
+      password => '*',
+      comment  => 'reprepro sandbox',
+      require  => Group[$group],
     }
   }
 
@@ -36,96 +36,98 @@ define reprepro::repository (
     group => $group,
   }
 
-  file { "$basedir":
+  file { $basedir:
     ensure => directory,
-    mode => $basedir_mode,
+    mode   => $basedir_mode,
   }
-  file { "$basedir/conf":
+  file { "${basedir}/conf":
     ensure => directory,
-    mode => '0770',
+    mode   => '0770',
   }
-  file { "$basedir/db":
+  file { "${basedir}/db":
     ensure => directory,
-    mode => '0770',
+    mode   => '0770',
   }
-  file { "$basedir/dists":
+  file { "${basedir}/dists":
     ensure => directory,
-    mode => '0775',
+    mode   => '0775',
   }
-  file { "$basedir/pool":
+  file { "${basedir}/pool":
     ensure => directory,
-    mode => '0775',
+    mode   => '0775',
   }
-  file { "$basedir/incoming":
+  file { "${basedir}/incoming":
     ensure => directory,
-    mode => $incoming_mode,
+    mode   => $incoming_mode,
   }
-  file { "$basedir/logs":
+  file { "${basedir}/logs":
     ensure => directory,
-    mode => '0775',
+    mode   => '0775',
   }
-  file { "$basedir/tmp":
+  file { "${basedir}/tmp":
     ensure => directory,
-    mode => '0775',
+    mode   => '0775',
   }
-  file { "$basedir/conf/uploaders":
-    mode => '0640', owner => root,
-    content => template("reprepro/uploaders.erb"),
+  file { "${basedir}/conf/uploaders":
+    mode    => '0640',
+    owner   => root,
+    content => template('reprepro/uploaders.erb'),
   }
-  file { "$basedir/index.html":
-    mode => '0664', owner => root,
-    content => template("reprepro/index.html.erb"),
+  file { "${basedir}/index.html":
+    mode    => '0664',
+    owner   => root,
+    content => template('reprepro/index.html.erb'),
   }
 
-  file { "$basedir/.gnupg":
+  file { "${basedir}/.gnupg":
     ensure => directory,
-    mode => '0700',
+    mode   => '0700',
   }
-  file { "$basedir/.gnupg/secring.gpg":
+  file { "${basedir}/.gnupg/secring.gpg":
     ensure => present,
-    mode => '0600',
+    mode   => '0600',
   }
 
-  exec { "/usr/local/bin/reprepro-export-key '$basedir'":
-    creates     => "$basedir/key.asc",
+  exec { "/usr/local/bin/reprepro-export-key '${basedir}'":
+    creates     => "${basedir}/key.asc",
     user        => $user,
-    subscribe   => File["$basedir/.gnupg/secring.gpg"],
-    require     => File["/usr/local/bin/reprepro-export-key"],
+    subscribe   => File["${basedir}/.gnupg/secring.gpg"],
+    require     => File['/usr/local/bin/reprepro-export-key'],
   }
 
 
-  file { "$basedir/conf/distributions":
+  file { "${basedir}/conf/distributions":
     ensure => present,
   }
   if $manage_distributions_conf {
-    File["$basedir/conf/distributions"] {
+    File["${basedir}/conf/distributions"] {
       owner   => root,
       mode    => '0664',
-      content => template("reprepro/distributions.erb"),
+      content => template('reprepro/distributions.erb'),
     }
 
-    exec { "reprepro -b $basedir createsymlinks":
+    exec { "reprepro -b ${basedir} createsymlinks":
         refreshonly => true,
-        subscribe => File["$basedir/conf/distributions"],
-        user => $user,
-        path => "/usr/bin:/bin",
+        subscribe   => File["${basedir}/conf/distributions"],
+        user        => $user,
+        path        => '/usr/bin:/bin',
     }
-    exec { "reprepro -b $basedir export":
+    exec { "reprepro -b ${basedir} export":
         refreshonly => true,
-        user => $user,
-        subscribe => File["$basedir/conf/distributions"],
-        path => "/usr/bin:/bin",
+        user        => $user,
+        subscribe   => File["${basedir}/conf/distributions"],
+        path        => '/usr/bin:/bin',
     }
   }
 
-  file { "$basedir/conf/incoming":
+  file { "${basedir}/conf/incoming":
     ensure => present,
   }
   if $manage_incoming_conf {
-    File["$basedir/conf/incoming"] {
-      mode => '0664',
-      owner => root,
-      source => "puppet:///modules/reprepro/incoming"
+    File["${basedir}/conf/incoming"] {
+      mode   => '0664',
+      owner  => root,
+      source => 'puppet:///modules/reprepro/incoming'
     }
   }
 
@@ -136,13 +138,13 @@ define reprepro::repository (
     default => absent,
   }
 
-  cron { "reprepro-$name":
+  cron { "reprepro-${name}":
     ensure  => $cron_presence,
-    command => "/usr/bin/reprepro --silent -b $basedir processincoming incoming",
+    command => "/usr/bin/reprepro --silent -b ${basedir} processincoming incoming",
     user    => $user,
     minute  => '*/5',
-    require => [ Package['reprepro'], File["$basedir/conf/distributions"],
-                 File["$basedir/incoming"], ],
+    require => [ Package['reprepro'], File["${basedir}/conf/distributions"],
+                 File["${basedir}/incoming"], ],
   }
 
   # Handling of incoming with inoticoming
@@ -167,22 +169,24 @@ define reprepro::repository (
     owner  => root,
     group  => root,
     mode   => '0755',
-    source => "puppet:///modules/reprepro/inoticoming.init",
+    source => 'puppet:///modules/reprepro/inoticoming.init',
   }
   file { '/etc/default/reprepro':
     ensure  => $inoticoming_presence,
-    owner   => root, group => root, mode => '0755',
+    owner   => root,
+    group   => root,
+    mode    => '0755',
     content => template('reprepro/inoticoming.default.erb'),
   }
 
   service { 'reprepro':
-    ensure => $inoticoming_enabled,
-    enable => $inoticoming_enabled,
+    ensure  => $inoticoming_enabled,
+    enable  => $inoticoming_enabled,
     pattern => 'inoticoming.*reprepro.*processincoming',
     require => [ Package['inoticoming'],
                  File['/etc/default/reprepro'],
                  File['/etc/init.d/reprepro'],
-                 File["$basedir/incoming"] ],
+                 File["${basedir}/incoming"] ],
   }
 
 # TODO: setup needeed lines in apache site config file
