@@ -8,6 +8,7 @@ define reprepro::repository (
   $basedir_mode  = '0771',
   $incoming_mode = '1777',
   $manage_distributions_conf    = true,
+  $manage_uploaders_conf        = true,
   $manage_incoming_conf         = true,
   $handle_incoming_with_cron    = false,
   $handle_incoming_with_inotify = false
@@ -78,10 +79,6 @@ define reprepro::repository (
     recurse => true,
     mode => '0775',
   }
-  file { "$basedir/conf/uploaders":
-    mode => '0640', owner => root,
-    content => template("reprepro/uploaders.erb"),
-  }
   file { "$basedir/index.html":
     mode => '0664', owner => root,
     content => template("reprepro/index.html.erb"),
@@ -104,6 +101,15 @@ define reprepro::repository (
     require     => File["/usr/local/bin/reprepro-export-key"],
   }
 
+  file { "$basedir/conf/uploaders":
+    ensure => present,
+  }
+  if $manage_uploaders_conf {
+    File["$basedir/conf/uploaders"] {
+      mode => '0640', owner => root,
+      content => template("reprepro/uploaders.erb"),
+    }
+  }
 
   file { "$basedir/conf/distributions":
     ensure => present,
