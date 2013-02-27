@@ -13,7 +13,8 @@ define reprepro::repository (
   $handle_incoming_with_inotify = false,
   $signwith = 'yes',
   $secring_source = undef,
-  $index_template = 'reprepro/index.html.erb'
+  $index_template = 'reprepro/index.html.erb',
+  $distributions_template = 'reprepro/distributions.erb'
 ) {
   include reprepro
 
@@ -107,7 +108,7 @@ define reprepro::repository (
     File["${basedir}/conf/distributions"] {
       owner   => root,
       mode    => '0664',
-      content => template('reprepro/distributions.erb'),
+      content => template($distributions_template),
     }
 
     exec { "reprepro -b ${basedir} createsymlinks":
