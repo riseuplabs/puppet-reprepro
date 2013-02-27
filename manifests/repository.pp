@@ -52,17 +52,14 @@ define reprepro::repository (
   }
   file { "${basedir}/db":
     ensure => directory,
-    recurse => true,
     mode   => '0770',
   }
   file { "${basedir}/dists":
     ensure => directory,
-    recurse => true,
     mode   => '0775',
   }
   file { "${basedir}/pool":
     ensure => directory,
-    recurse => true,
     mode   => '0775',
   }
   file { "${basedir}/incoming":
@@ -71,18 +68,15 @@ define reprepro::repository (
   }
   file { "$basedir/refused":
     ensure => directory,
-    recurse => true,
-    mode => '0775',
+    mode   => '0775',
   }
   file { "$basedir/logs":
     ensure => directory,
     recurse => true,
-    mode   => '0775',
   }
   file { "${basedir}/tmp":
     ensure => directory,
     recurse => true,
-    mode   => '0775',
   }
   file { "${basedir}/index.html":
     mode    => '0664',
@@ -92,7 +86,6 @@ define reprepro::repository (
 
   file { "${basedir}/.gnupg":
     ensure => directory,
-    recurse => true,
     mode   => '0700',
   }
   file { "${basedir}/.gnupg/secring.gpg":
