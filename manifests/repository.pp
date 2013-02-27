@@ -146,7 +146,8 @@ define reprepro::repository (
     command => "/usr/bin/reprepro --silent -b ${basedir} processincoming incoming",
     user    => $user,
     minute  => '*/5',
-    require => [ Package['reprepro'], File["${basedir}/conf/distributions"],
+    require => [ Package['reprepro'],
+                 File["${basedir}/conf/distributions"],
                  File["${basedir}/incoming"], ],
   }
 
@@ -186,7 +187,8 @@ define reprepro::repository (
     ensure  => $inoticoming_enabled,
     enable  => $inoticoming_enabled,
     pattern => 'inoticoming.*reprepro.*processincoming',
-    require => [ Package['reprepro'], Package['inoticoming'],
+    require => [ Package['reprepro'],
+                 Package['inoticoming'],
                  File['/etc/default/reprepro'],
                  File['/etc/init.d/reprepro'],
                  File["${basedir}/incoming"] ],
