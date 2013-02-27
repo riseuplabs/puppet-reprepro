@@ -7,7 +7,7 @@ Pull: testing
 Codename: stable
 Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
-SignWith: yes
+SignWith: <%= signwith %>
 Uploaders: uploaders
 
 Origin: <%= @origin %>
@@ -17,7 +17,7 @@ Pull: unstable
 Codename: testing
 Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
-SignWith: yes
+SignWith: <%= signwith %>
 Uploaders: uploaders
 
 Origin: <%= @origin %>
@@ -26,5 +26,5 @@ Suite: unstable
 Codename: unstable
 Architectures: <%= @architectures.join(' ') %>
 Components: main non-free contrib
-SignWith: yes
+SignWith: <%= signwith %>
 Uploaders: uploaders
