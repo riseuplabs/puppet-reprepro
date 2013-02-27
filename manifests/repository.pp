@@ -11,7 +11,8 @@ define reprepro::repository (
   $manage_incoming_conf         = true,
   $handle_incoming_with_cron    = false,
   $handle_incoming_with_inotify = false,
-  $signwith = 'yes'
+  $signwith = 'yes',
+  $secring_source = undef
 ) {
   include reprepro
 
@@ -86,6 +87,7 @@ define reprepro::repository (
   }
   file { "${basedir}/.gnupg/secring.gpg":
     ensure => present,
+    source => $secring_source,
     mode   => '0600',
   }
 
