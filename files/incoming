@@ -5,3 +5,4 @@ IncomingDir: incoming
 TempDir: tmp
 Allow: stable testing unstable
 Cleanup: on_deny on_error
+MorgueDir: refused

@@ -8,6 +8,7 @@ define reprepro::repository (
   $basedir_mode  = '0771',
   $incoming_mode = '1777',
   $manage_distributions_conf    = true,
+  $manage_uploaders_conf        = true,
   $manage_incoming_conf         = true,
   $handle_incoming_with_cron    = false,
   $handle_incoming_with_inotify = false,
@@ -65,18 +66,17 @@ define reprepro::repository (
     ensure => directory,
     mode   => $incoming_mode,
   }
-  file { "${basedir}/logs":
+  file { "$basedir/refused":
     ensure => directory,
     mode   => '0775',
+  }
+  file { "$basedir/logs":
+    ensure => directory,
+    recurse => true,
   }
   file { "${basedir}/tmp":
     ensure => directory,
-    mode   => '0775',
-  }
-  file { "${basedir}/conf/uploaders":
-    mode    => '0640',
-    owner   => root,
-    content => template('reprepro/uploaders.erb'),
+    recurse => true,
   }
   file { "${basedir}/index.html":
     mode    => '0664',
@@ -100,7 +100,15 @@ define reprepro::repository (
     subscribe   => File["${basedir}/.gnupg/secring.gpg"],
     require     => File['/usr/local/bin/reprepro-export-key'],
   }
-
+  file { "${basedir}/conf/uploaders":
+    ensure => present,
+  }
+  if $manage_uploaders_conf {
+    File["$basedir/conf/uploaders"] {
+      mode => '0640', owner => root,
+      content => template("reprepro/uploaders.erb"),
+    }
+  }
 
   file { "${basedir}/conf/distributions":
     ensure => present,
@@ -149,7 +157,8 @@ define reprepro::repository (
     command => "/usr/bin/reprepro --silent -b ${basedir} processincoming incoming",
     user    => $user,
     minute  => '*/5',
-    require => [ Package['reprepro'], File["${basedir}/conf/distributions"],
+    require => [ Package['reprepro'],
+                 File["${basedir}/conf/distributions"],
                  File["${basedir}/incoming"], ],
   }
 
@@ -189,7 +198,8 @@ define reprepro::repository (
     ensure  => $inoticoming_enabled,
     enable  => $inoticoming_enabled,
     pattern => 'inoticoming.*reprepro.*processincoming',
-    require => [ Package['reprepro'], Package['inoticoming'],
+    require => [ Package['reprepro'],
+                 Package['inoticoming'],
                  File['/etc/default/reprepro'],
                  File['/etc/init.d/reprepro'],
                  File["${basedir}/incoming"] ],
