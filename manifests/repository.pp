@@ -14,7 +14,8 @@ define reprepro::repository (
   $signwith = 'yes',
   $secring_source = undef,
   $index_template = 'reprepro/index.html.erb',
-  $distributions_template = 'reprepro/distributions.erb'
+  $distributions_template = 'reprepro/distributions.erb',
+  $incoming_source = 'puppet:///modules/reprepro/incoming'
 ) {
   include reprepro
 
@@ -132,7 +133,7 @@ define reprepro::repository (
     File["${basedir}/conf/incoming"] {
       mode   => '0664',
       owner  => root,
-      source => 'puppet:///modules/reprepro/incoming'
+      source => $incoming_source
     }
   }
 
