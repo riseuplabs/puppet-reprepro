@@ -13,6 +13,7 @@ define reprepro::repository (
   $handle_incoming_with_inotify = false,
   $signwith = 'yes',
   $secring_source = undef,
+  $index_template = 'reprepro/index.html.erb',
 ) {
   include reprepro
 
@@ -78,7 +79,7 @@ define reprepro::repository (
   file { "${basedir}/index.html":
     mode    => '0664',
     owner   => root,
-    content => template('reprepro/index.html.erb'),
+    content => template($index_template),
   }
 
   file { "${basedir}/.gnupg":
